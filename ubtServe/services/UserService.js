@@ -375,10 +375,10 @@ const UserService = {
     /* getSvg: ({ user_telphone }, callback) => {
         console.log("+--+=" + user_telphone);
         // 设置值
-        let accessKeyId = "LTAI5tE54MEpf5zs7MrfuVMP"; // AccessKey ID
-        let secretAccessKey = "aWWhpjS3x7bEkU3FkkcquwcO7JSBb4"; // AccessKey Secret
+        let accessKeyId = "xxxxxxxxxxxxxxxx"; // AccessKey ID
+        let secretAccessKey = "xxxxxxxxxxxxxxxxxxxxxxxxx"; // AccessKey Secret
         let signName = "阿里云短信测试"; // 签名名称
-        let templateCode = "SMS_154950909"; // 短信模板code
+        let templateCode = "xxxxxxxxxxxxxxx"; // 短信模板code
 
         // 初始化sms_client
         const smsClient = new SMSClient({
