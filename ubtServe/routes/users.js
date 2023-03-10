@@ -22,6 +22,7 @@ router.post("/avater", UserController.changeAvater)
 router.post("/avaterw/:id", upload_userImg.single("user_image"), UserController.changeAvaterw)
 //获取用户列表
 router.get("/", UserController.getUser)
+router.get("/find", UserController.findUser)
 //获取验证码
 router.post("/getSvg", UserController.getSvg)
 // 添加取消收藏

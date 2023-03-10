@@ -342,19 +342,84 @@ const UserService = {
         }
     },
 
-    getUser: (callback) => {
-        let sql_find = `select * from User`;
+    getUser: ({ page }, callback) => {
+        let sql_find_total = `select COUNT(*) AS count from User`;
+        let sql_find_page = `SELECT CEIL(COUNT(*) / 6) AS pageTotal FROM User`;
+        let sql_find = `SELECT * FROM User LIMIT 6 OFFSET ?;`;
+        let offsets = (parseInt(page) - 1) * 6
+        let sql_findParams = [offsets];
+        let newPage = parseInt(page);
+        let result = { count: null, userData: null, page: newPage };
+        // console.log(typeof newPage)
 
         try {
-            conn.query(sql_find, function (err, results, fields) {
+            conn.query(sql_find_page, function (err, results1, fields) {
                 if (err) {
                     throw err
                 }
-                //将查询出来的数据返回给回调函数
-                callback &&
-                    callback(
-                        results ? JSON.parse(JSON.stringify(results)) : null
-                    )
+                // console.log(results1)
+                if (page > results1[0].pageTotal) {
+                    callback({ code: 0, value: "页数超出限制" })
+                } else {
+                    conn.query(sql_find_total, function (err, results2, fields) {
+                        if (err) {
+                            throw err
+                        }
+                        // console.log(results2)
+                        result.count = results2[0].count
+                        if (results2[0].count > 0) {
+                            conn.query(sql_find, sql_findParams, function (err, results3, fields) {
+                                if (err) {
+                                    throw err
+                                }
+                                // console.log(results3)
+                                result.userData = results3
+                                console.log(result)
+                                //将查询出来的数据返回给回调函数
+                                callback &&
+                                    callback(
+                                        result ? JSON.parse(JSON.stringify(result)) : null
+                                    )
+                            })
+                        }
+                    })
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    findUser: ({ nickname }, callback) => {
+        let sql_find_total = `select COUNT(*) AS count from User where user_nickname like ?`;
+        let sql_find = `SELECT * FROM User where user_nickname like ?`;
+        let sql_findParams = [('%'+nickname+'%')];
+        // console.log(sql_findParams)
+
+        let result = { count: null, userData: null, page: 1 };
+
+        try {
+            conn.query(sql_find_total,sql_findParams, function (err, results1, fields) {
+                if (err) {
+                    throw err
+                }
+                // console.log(results1)
+                result.count = results1[0].count
+                if (results1[0].count > 0) {
+                    conn.query(sql_find, sql_findParams, function (err, results2, fields) {
+                        if (err) {
+                            throw err
+                        }
+                        // console.log(results2)
+                        result.userData = results2
+                        console.log(result)
+                        //将查询出来的数据返回给回调函数
+                        callback &&
+                            callback(
+                                result ? JSON.parse(JSON.stringify(result)) : null
+                            )
+                    })
+                }
             })
         } catch (error) {
             console.log(error);

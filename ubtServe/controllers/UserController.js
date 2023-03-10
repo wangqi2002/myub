@@ -82,7 +82,16 @@ const UserController = {
     },
 
     getUser: async (req, res) => {
-        await UserService.getUser((results) => {
+        console.log(req.query)
+        await UserService.getUser(req.query,(results) => {
+            // 以json的形式返回
+            res.send(results)
+        })
+    },
+
+    findUser: async (req, res) => {
+        console.log(req.query)
+        await UserService.findUser(req.query,(results) => {
             // 以json的形式返回
             res.send(results)
         })
