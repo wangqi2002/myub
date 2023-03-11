@@ -1,0 +1,5 @@
+ubtVueadmin/
+ubtServe/node_modules/
+ubtVuedesk/node_modules/
+ubtVuedesk/dist/
+*.zip
