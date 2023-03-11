@@ -15,6 +15,8 @@ router.put("/price/:id", BookAboutController.updateBook_price)
 router.delete("/:id", BookAboutController.deleteBook)
 //查询所有书籍
 router.get("/all", BookAboutController.getBook)
+//查询所有书籍 分页
+router.get("/all_page", BookAboutController.getBook_page)
 //总条数
 router.get("/allnum", BookAboutController.getBooknum)
 //首页展示 limit限制
@@ -25,10 +27,14 @@ router.get("/id/:id", BookAboutController.getBook_id)
 router.get("/idTrue/:id", BookAboutController.getBook_idTrue)
 //根据isbn查询
 router.get("/isbn/:id", BookAboutController.getBook_isbn)
+//根据isbn查询 分页
+router.get("/isbn_page/:id", BookAboutController.getBook_isbn_page)
 //根据kind查询
 router.get("/kind/:id", BookAboutController.getBook_kind)
 //根据stand查询
 router.get("/stand/:id", BookAboutController.getBook_stand)
+//根据state分页查询
+router.get("/state/:id", BookAboutController.getBook_state)
 //isbn和state联查
 router.get("/isbnlink", BookAboutController.getBook_isbnlink)
 //isbn和state联查

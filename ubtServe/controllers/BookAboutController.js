@@ -48,7 +48,7 @@ const BookAboutController = {
         });
 
     },
-    
+
     deleteCollectionAll: async (req, res) => {
         // console.log(req.body, req.params.id)
         await BookAboutService.deleteCollectionAll((result) => {
@@ -67,6 +67,13 @@ const BookAboutController = {
 
     getBook: async (req, res) => {
         await BookAboutService.getBook(null, (results) => {
+            // 以json的形式返回
+            res.json({ results })
+        })
+    },
+
+    getBook_page: async (req, res) => {
+        await BookAboutService.getBook_page(req.query, (results) => {
             // 以json的形式返回
             res.json({ results })
         })
@@ -130,6 +137,14 @@ const BookAboutController = {
         })
     },
 
+    getBook_isbn_page: async (req, res) => {
+        // console.log(req.params.id)
+        await BookAboutService.getBook_isbn_page(req.params.id, (results) => {
+            // 以json的形式返回
+            res.json({ results })
+        })
+    },
+
     getBook_kind: async (req, res) => {
         // console.log(req.params.id)
         await BookAboutService.getBook_kind(req.params.id, (results) => {
@@ -141,6 +156,14 @@ const BookAboutController = {
     getBook_stand: async (req, res) => {
         // console.log(req.params.id)
         await BookAboutService.getBook_stand(req.params.id, (results) => {
+            // 以json的形式返回
+            res.json({ results })
+        })
+    },
+
+    getBook_state: async (req, res) => {
+        // console.log(req.params.id)
+        await BookAboutService.getBook_state(req.params.id, req.query, (results) => {
             // 以json的形式返回
             res.json({ results })
         })

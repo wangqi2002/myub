@@ -151,6 +151,44 @@ const BookAboutService = {
         }
     },
 
+    getBook_page: ({ page }, callback) => {
+        let sql_find_total = `select COUNT(*) AS count from bookabout`;
+        let sql_find = `select * from (select * from bookabout LIMIT 6 OFFSET ?) a LEFT OUTER JOIN books s ON a.bookA_isbn=s.book_isbn`
+        let offsets = (parseInt(page) - 1) * 6
+        let sql_findParams = [offsets];
+        let result = { count: null, bookData: null, page: page };
+
+        try {
+            conn.query(sql_find_total, sql_findParams, function (err, results1) {
+                if (err) {
+                    throw err
+                }
+                result.count = results1[0].count
+                if (results1[0].count > 0) {
+                    conn.query(sql_find, sql_findParams, function (err, results2) {
+                        if (err) {
+                            throw err
+                        }
+                        result.bookData = results2
+                        console.log(result)
+                        //将查询出来的数据返回给回调函数
+                        callback &&
+                            callback(
+                                result ? JSON.parse(JSON.stringify(result)) : null
+                            )
+                    })
+                } else {
+                    callback &&
+                    callback(
+                        result ? JSON.parse(JSON.stringify(result)) : null
+                    )
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     getBooknum: (args, callback) => {
         let sql_find = `select count(1) as total from bookabout where bookA_state=2`;
 
@@ -302,6 +340,43 @@ const BookAboutService = {
         }
     },
 
+    getBook_isbn_page: (bookA_isbn, callback) => {
+        let sql_find_total = `select COUNT(*) AS count from (select * from bookabout where bookA_isbn=?) as a`;
+        let sql_find = `select * from (select * from bookabout where bookA_isbn=?) a LEFT OUTER JOIN books s  ON a.bookA_isbn=s.book_isbn`;
+        let sql_findParams = [bookA_isbn];
+        let result = { count: null, bookData: null, page: page };
+
+        try {
+            conn.query(sql_find_total, sql_findParams, function (err, results1, fields) {
+                if (err) {
+                    throw err
+                }
+                result.count = results1[0].count
+                if (results1[0].count > 0) {
+                    conn.query(sql_find, sql_findParams, function (err, results2) {
+                        if (err) {
+                            throw err
+                        }
+                        result.userData = results2
+                        console.log(result)
+                        //将查询出来的数据返回给回调函数
+                        callback &&
+                            callback(
+                                result ? JSON.parse(JSON.stringify(result)) : null
+                            )
+                    })
+                } else {
+                    callback &&
+                    callback(
+                        result ? JSON.parse(JSON.stringify(result)) : null
+                    )
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     getBook_kind: (bookA_kind, callback) => {
         let sql_find = `select * from bookabout where bookA_kind=?`;
 
@@ -340,42 +415,80 @@ const BookAboutService = {
         }
     },
 
+    getBook_state: (bookA_state, { page }, callback) => {
+        let sql_find_total = `select COUNT(*) AS count from (select * from bookabout where bookA_state=?) as a`;
+        let sql_find = `select * from (select * from bookabout where bookA_state=? LIMIT 6 OFFSET ?) a LEFT OUTER JOIN books s ON a.bookA_isbn=s.book_isbn`
+        let offsets = (parseInt(page) - 1) * 6
+        let sql_findParams = [bookA_state, offsets];
+        let result = { count: null, bookData: null, page: page };
+
+        try {
+            conn.query(sql_find_total, sql_findParams, function (err, results1) {
+                if (err) {
+                    throw err
+                }
+                result.count = results1[0].count
+                if (results1[0].count > 0) {
+                    conn.query(sql_find, sql_findParams, function (err, results2) {
+                        if (err) {
+                            throw err
+                        }
+                        result.bookData = results2
+                        console.log(result)
+                        //将查询出来的数据返回给回调函数
+                        callback &&
+                            callback(
+                                result ? JSON.parse(JSON.stringify(result)) : null
+                            )
+                    })
+                } else {
+                    callback &&
+                    callback(
+                        result ? JSON.parse(JSON.stringify(result)) : null
+                    )
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     changeBookAimage: (bookA_id, bookA_image, callback) => {
 
         console.log('到达了service');
 
         console.log(bookA_id, bookA_image);
-    
+
         let sql_update = `UPDATE bookabout set bookA_image=? where bookA_id=?`;
         let sql_updateParams = [bookA_image, bookA_id];
         let sql_look_account = `SELECT * FROM bookabout WHERE bookA_id= ?`
         conn.query(sql_look_account, bookA_id, (err1, result1) => {
-          if (err1) {
-            throw err1
-          }
-          if (!result1.length) callback({
-            code: 0,
-            value: "该书不存在！"
-          })
-          else {
-            conn.query(sql_update, sql_updateParams, (err2, results2) => {
-              if (err2) {
-                throw err2
-              }
-              console.log(results2, "444");
-              if (err2) callback({
+            if (err1) {
+                throw err1
+            }
+            if (!result1.length) callback({
                 code: 0,
-                value: "更新失败！"
-              })
-              else callback({
-                code: 1,
-                value: "更新成功"
-              })
+                value: "该书不存在！"
             })
-          }
+            else {
+                conn.query(sql_update, sql_updateParams, (err2, results2) => {
+                    if (err2) {
+                        throw err2
+                    }
+                    console.log(results2, "444");
+                    if (err2) callback({
+                        code: 0,
+                        value: "更新失败！"
+                    })
+                    else callback({
+                        code: 1,
+                        value: "更新成功"
+                    })
+                })
+            }
         })
-    
-      },
+
+    },
 }
 
 module.exports = BookAboutService

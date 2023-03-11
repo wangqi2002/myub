@@ -419,6 +419,11 @@ const UserService = {
                                 result ? JSON.parse(JSON.stringify(result)) : null
                             )
                     })
+                } else {
+                    callback &&
+                    callback(
+                        result ? JSON.parse(JSON.stringify(result)) : null
+                    )
                 }
             })
         } catch (error) {
