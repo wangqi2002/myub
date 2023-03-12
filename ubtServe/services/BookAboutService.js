@@ -416,15 +416,15 @@ const BookAboutService = {
         }
     },
 
-    getBook_state: (bookA_state, { page }, callback) => {
+    getBook_state: ({state, page }, callback) => {
         let sql_find_total = `select COUNT(*) AS count from (select * from bookabout where bookA_state=?) as a`;
         let sql_find = `select * from (select * from bookabout where bookA_state=? LIMIT 6 OFFSET ?) a LEFT OUTER JOIN books s ON a.bookA_isbn=s.book_isbn`
         let offsets = (parseInt(page) - 1) * 6
-        let sql_findParams = [bookA_state, offsets];
+        let sql_findParams = [state, offsets];
         let result = { count: null, bookData: null, page: page };
 
         try {
-            conn.query(sql_find_total, sql_findParams, function (err, results1) {
+            conn.query(sql_find_total, state, function (err, results1) {
                 if (err) {
                     throw err
                 }

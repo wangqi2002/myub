@@ -2,7 +2,7 @@ const BuyerorderService = require("../services/BuyerorderService")
 const BuyerorderController = {
     addOrder: async (req, res) => {
         // console.log(req.body)
-        
+
         await BuyerorderService.addOrder(req.body, (result) => {
             res.send(result)
         });
@@ -47,6 +47,14 @@ const BuyerorderController = {
 
     getOrder_status: async (req, res) => {
         await BuyerorderService.getOrder_status(req.query, (results) => {
+            // 以json的形式返回
+            res.json({ results })
+        })
+    },
+
+    getOrder_status_page: async (req, res) => {
+        console.log(req.query)
+        await BuyerorderService.getOrder_status_page(req.query, (results) => {
             // 以json的形式返回
             res.json({ results })
         })

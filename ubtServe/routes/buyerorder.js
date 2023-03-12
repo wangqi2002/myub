@@ -16,5 +16,7 @@ router.get("/seller_id/:id", BuyerorderController.getOrder_sellerId)
 router.get("/status/:id", BuyerorderController.getOrder_status)
 router.get("/link_sAn/:id", BuyerorderController.getOrder_sAn)
 router.get("/buyid_status", BuyerorderController.getOrder_buyidStat)
+//根据状态查询 分页
+router.get("/status_page", BuyerorderController.getOrder_status_page)
 
 module.exports = router;

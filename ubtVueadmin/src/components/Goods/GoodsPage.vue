@@ -8,9 +8,13 @@
     <div class="content-main">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="全部商品" name="first"> </el-tab-pane>
-        <el-tab-pane label="出售中" name="second"></el-tab-pane>
-        <el-tab-pane label="已售完" name="third"></el-tab-pane>
-        <el-tab-pane label="已下架" name="fourth"></el-tab-pane>
+        <el-tab-pane label="已上架" name="second"></el-tab-pane>
+        <el-tab-pane label="待收" name="third"></el-tab-pane>
+        <el-tab-pane label="待入库" name="fourth"></el-tab-pane>
+        <el-tab-pane label="已下单" name="fifth"></el-tab-pane>
+        <el-tab-pane label="运输中" name="sixth"></el-tab-pane>
+        <el-tab-pane label="已签收" name="seventh"></el-tab-pane>
+        <el-tab-pane label="拒收" name="eighth"></el-tab-pane>
       </el-tabs> 
       <div class="filter-box">
         <el-form :inline="true" :model="filterForm" class="form-inline">
@@ -72,38 +76,56 @@ export default {
       this.page = 1
       this.activeClass = 0
       if (pindex == 0) {
-        this.getList()
+        this.getAllList()
         this.pIndex = 0
       } else if (pindex == 1) {
-        this.getOnSaleList()
+        this.getList(2)
         this.pIndex = 1
       } else if (pindex == 2) {
-        this.getOutList()
+        this.getList(0)
         this.pIndex = 2
       } else if (pindex == 3) {
-        this.getDropList()
+        this.getList(1)
         this.pIndex = 3
+      } else if (pindex == 4) {
+        this.getList(3)
+        this.pIndex = 4
+      } else if (pindex == 5) {
+        this.getList(4)
+        this.pIndex = 5
+      } else if (pindex == 6) {
+        this.getList(5)
+        this.pIndex = 6
+      } else if (pindex == 7) {
+        this.getList(6)
+        this.pIndex = 7
       }
     },
     handlePageChange(val) {
       this.page = val
       let nIndex = this.pIndex
       if (nIndex == 0) {
-        this.getList()
+        this.getAllList()
       } else if (nIndex == 1) {
-        this.getOnSaleList()
+        this.getList(2)
       } else if (nIndex == 2) {
-        this.getOutList()
+        this.getList(0)
       } else if (nIndex == 3) {
-        this.getDropList()
+        this.getList(1)
       } else if (nIndex == 4) {
-        this.sortOrder(this.num)
+        this.getList(3)
+      } else if (nIndex == 5) {
+        this.getList(4)
+      } else if (nIndex == 6) {
+        this.getList(5)
+      } else if (nIndex == 7) {
+        this.getList(6)
       }
     },
     onSubmitFilter() {
       this.findBooks()
     },
-    getList() {
+    getAllList() {
       this.axios
         .get('/bookabout/all_page', {
           params: {
@@ -125,10 +147,11 @@ export default {
         this.total = response.data.results.count
       })
     },
-    getOnSaleList() {
+    getList(state) {
       this.axios
-        .get('/bookabout/state/2', {
+        .get('/bookabout/state', {
           params: {
+            state:state,
             page: this.page
           }
         })
@@ -138,68 +161,11 @@ export default {
           this.page = parseInt(response.data.results.page)
           this.total = response.data.results.count
         })
-    },
-    getOutList() {
-      this.axios
-        .get('goods/out', {
-          params: {
-            page: this.page
-          }
-        })
-        .then(response => {
-          this.tableData = response.data.data.data
-          this.page = response.data.data.currentPage
-          this.total = response.data.data.count
-        })
-    },
-    getDropList() {
-      this.axios
-        .get('goods/drop', {
-          params: {
-            page: this.page,
-            size: this.size
-          }
-        })
-        .then(response => {
-          this.tableData = response.data.data.data
-          this.page = response.data.data.currentPage
-          this.total = response.data.data.count
-        })
-    },
-    changeStatus($event, para) {
-      this.axios
-        .get('goods/saleStatus', {
-          params: {
-            status: $event,
-            id: para
-          }
-        })
-        .then(response => {})
-    },
-    changeProductStatus($event, para) {
-      this.axios
-        .get('goods/productStatus', {
-          params: {
-            status: $event,
-            id: para
-          }
-        })
-        .then(response => {})
-    },
-    changeShowStatus($event, para) {
-      this.axios
-        .get('goods/indexShowStatus', {
-          params: {
-            status: $event,
-            id: para
-          }
-        })
-        .then(response => {})
     }
   },
   components: {},
   mounted() {
-    this.getOnSaleList()
+    this.getList(2)
   }
 }
 </script>

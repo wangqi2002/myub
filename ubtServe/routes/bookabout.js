@@ -34,7 +34,7 @@ router.get("/kind/:id", BookAboutController.getBook_kind)
 //根据stand查询
 router.get("/stand/:id", BookAboutController.getBook_stand)
 //根据state分页查询
-router.get("/state/:id", BookAboutController.getBook_state)
+router.get("/state", BookAboutController.getBook_state)
 //isbn和state联查
 router.get("/isbnlink", BookAboutController.getBook_isbnlink)
 //isbn和state联查

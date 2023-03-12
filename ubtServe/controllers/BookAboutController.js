@@ -162,8 +162,8 @@ const BookAboutController = {
     },
 
     getBook_state: async (req, res) => {
-        // console.log(req.params.id)
-        await BookAboutService.getBook_state(req.params.id, req.query, (results) => {
+        console.log(req.query)
+        await BookAboutService.getBook_state(req.query, (results) => {
             // 以json的形式返回
             res.json({ results })
         })

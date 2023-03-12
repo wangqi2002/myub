@@ -437,7 +437,6 @@ const UserService = {
             num += Math.floor(Math.random() * 10).toString()
         }
         console.log(num)
-        // let result = await axios.post(`http://106.ihuyi.com/webservice/sms.php/?method=Submit&account=C74236194&password=5f65a85c9b211a625b16e786a8c73980&mobile=19556634824&content=${encodeURI(`您的验证码是：${num}。请不要把验证码泄露给其他人。`)}`) 
         // console.log(result);  
         callback && callback(num)
     },
