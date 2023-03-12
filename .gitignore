@@ -2,4 +2,5 @@ ubtVueadmin/node_modules/
 ubtServe/node_modules/
 ubtVuedesk/node_modules/
 ubtVuedesk/dist/
+connectionsConfig.json
 *.zip
