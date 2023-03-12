@@ -1,4 +1,4 @@
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const recordService = {
     addRecord: ({ r_userId, r_url, r_result }, callback) => {
         let r_id = new Date().getTime() + Math.random().toString(36).substring(4, 9);

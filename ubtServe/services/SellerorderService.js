@@ -1,4 +1,4 @@
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const SellerorderService = {
     addOrder: ({ sellerorder_sellerid, sellerorder_book_isbn, sellerorder_address, sellerorder_bookid }, callback) => {
 

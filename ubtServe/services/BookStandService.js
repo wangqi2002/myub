@@ -1,4 +1,4 @@
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const BookStandService = {
     addStand: async ({ book_stand_id, book_stand_location }, callback) => {
         console.log("-----" + book_stand_id, book_stand_location + "-----")

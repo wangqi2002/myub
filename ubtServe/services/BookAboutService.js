@@ -1,4 +1,4 @@
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const BookAboutService = {
     addBook: (bookA_isbn, bookA_old_degree, bookA_price, bookA_image, bookA_stand, bookA_kind, callback) => {
         console.log("---", bookA_isbn, bookA_old_degree, bookA_price, bookA_image, bookA_stand, bookA_kind, "----");
@@ -159,10 +159,11 @@ const BookAboutService = {
         let result = { count: null, bookData: null, page: page };
 
         try {
-            conn.query(sql_find_total, sql_findParams, function (err, results1) {
+            conn.query(sql_find_total, function (err, results1) {
                 if (err) {
                     throw err
                 }
+                // console.log(results1)
                 result.count = results1[0].count
                 if (results1[0].count > 0) {
                     conn.query(sql_find, sql_findParams, function (err, results2) {
@@ -170,7 +171,7 @@ const BookAboutService = {
                             throw err
                         }
                         result.bookData = results2
-                        console.log(result)
+                        // console.log(result)
                         //将查询出来的数据返回给回调函数
                         callback &&
                             callback(
@@ -344,7 +345,7 @@ const BookAboutService = {
         let sql_find_total = `select COUNT(*) AS count from (select * from bookabout where bookA_isbn=?) as a`;
         let sql_find = `select * from (select * from bookabout where bookA_isbn=?) a LEFT OUTER JOIN books s  ON a.bookA_isbn=s.book_isbn`;
         let sql_findParams = [bookA_isbn];
-        let result = { count: null, bookData: null, page: page };
+        let result = { count: null, bookData: null};
 
         try {
             conn.query(sql_find_total, sql_findParams, function (err, results1, fields) {
@@ -357,8 +358,8 @@ const BookAboutService = {
                         if (err) {
                             throw err
                         }
-                        result.userData = results2
-                        console.log(result)
+                        result.bookData = results2
+                        // console.log(result)
                         //将查询出来的数据返回给回调函数
                         callback &&
                             callback(
@@ -434,7 +435,7 @@ const BookAboutService = {
                             throw err
                         }
                         result.bookData = results2
-                        console.log(result)
+                        // console.log(result)
                         //将查询出来的数据返回给回调函数
                         callback &&
                             callback(

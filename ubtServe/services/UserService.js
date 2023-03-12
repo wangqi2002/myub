@@ -1,4 +1,4 @@
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const SMSClient = require('@alicloud/sms-sdk');
 
 const UserService = {

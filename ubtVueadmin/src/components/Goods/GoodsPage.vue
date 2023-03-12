@@ -11,7 +11,7 @@
         <el-tab-pane label="出售中" name="second"></el-tab-pane>
         <el-tab-pane label="已售完" name="third"></el-tab-pane>
         <el-tab-pane label="已下架" name="fourth"></el-tab-pane>
-      </el-tabs>
+      </el-tabs> 
       <div class="filter-box">
         <el-form :inline="true" :model="filterForm" class="form-inline">
           <el-form-item label="商品ISBN">
@@ -19,60 +19,21 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" size="small" @click="onSubmitFilter">查询</el-button>
-            <el-button size="small" @click="clear">清空</el-button>
           </el-form-item>
         </el-form>
       </div>
       <div class="form-table-box">
         <el-table :data="tableData" style="width: 100%" stripe>
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-table :data="props.row.product" style="width: 100%" stripe>
-                <el-table-column prop="cost" label="原价(元)" width="90">
-                  <template slot-scope="scope">
-                    <el-input size="mini" v-model="scope.row.cost" placeholder="原价"></el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="retail_price" label="现价(元)" width="90">
-                  <template slot-scope="scope">
-                    <el-input size="mini" v-model="scope.row.retail_price" placeholder="现价"></el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column prop="goods_number" label="库存" width="90">
-                  <template slot-scope="scope">
-                    <el-input size="mini" v-model="scope.row.goods_number" placeholder="库存"></el-input>
-                  </template>
-                </el-table-column>
-              </el-table>
+          <el-table-column prop="bookA_id" label="ID" width="120"></el-table-column>
+          <el-table-column prop="book_cover" label="商品图片" width="80">
+            <template slot-scope="scope">
+              <img :src="'https://serve.sirbook.top' + scope.row.book_cover" alt="" style="width: 40px; height: 40px" />
             </template>
           </el-table-column>
-          <el-table-column prop="id" label="ID" width="120"></el-table-column>
-          <el-table-column prop="list_pic_url" label="商品图片" width="80">
-            <template slot-scope="scope">
-              <img :src="scope.row.list_pic_url" alt="" style="width: 40px; height: 40px" />
-            </template>
-          </el-table-column>
-          <el-table-column prop="name" label="商品名称"></el-table-column>
-          <el-table-column prop="goods_number" label="库存" width="80" sortable> </el-table-column>
-          <!-- <el-table-column label="上架" width="80">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.is_on_sale"
-                active-text=""
-                inactive-text=""
-                @change="changeStatus($event, scope.row.id)"
-              >
-              </el-switch>
-            </template>
-          </el-table-column> -->
-          <!-- <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button size="small" @click="handleRowEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="small" plain type="danger" @click="handleRowDelete(scope.$index, scope.row)"
-                >删除
-              </el-button>
-            </template>
-          </el-table-column> -->
+          <el-table-column prop="book_name" label="商品名称"></el-table-column>
+          <el-table-column prop="bookA_kind" label="类别"></el-table-column>
+          <el-table-column prop="bookA_date" label="上传时间"></el-table-column>
+          <el-table-column prop="bookA_state" label="状态" width="80" sortable> </el-table-column>
         </el-table>
       </div>
       <div class="page-box">
@@ -102,7 +63,7 @@ export default {
       tableData: [],
       activeName: 'second',
       pIndex: 0,
-      activeClass: 0,
+      activeClass: 0
     }
   },
   methods: {
@@ -139,60 +100,8 @@ export default {
         this.sortOrder(this.num)
       }
     },
-    // handleRowEdit(index, row) {
-    //   this.$router.push({ name: 'goods_add', query: { id: row.id } })
-    // },
-    // handleRowDelete(index, row) {
-    //   this.$confirm('确定要删除?', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   })
-    //     .then(() => {
-    //       let that = this
-    //       that.axios.post('goods/destory', { id: row.id }).then(response => {
-    //         if (response.data.errno === 0) {
-    //           that.$message({
-    //             type: 'success',
-    //             message: '删除成功!'
-    //           })
-    //           let pIndex = localStorage.getItem('pIndex')
-    //           console.log(pIndex)
-    //           if (pIndex == 0) {
-    //             that.getList()
-    //           } else if (pIndex == 1) {
-    //             that.getOnSaleList()
-    //           } else if (pIndex == 2) {
-    //             that.getOutList()
-    //           } else if (pIndex == 3) {
-    //             that.getDropList()
-    //           }
-    //         }
-    //       })
-    //     })
-    //     .catch(() => {
-    //       this.$message({
-    //         type: 'info',
-    //         message: '已取消删除'
-    //       })
-    //     })
-    // },
     onSubmitFilter() {
       this.findBooks()
-    },
-    clear() {
-      this.axios
-        .get('goods', {
-          params: {
-            page: this.page,
-            name: ''
-          }
-        })
-        .then(response => {
-          this.tableData = response.data.data.data
-          this.page = response.data.data.currentPage
-          this.total = response.data.data.count
-        })
     },
     getList() {
       this.axios
@@ -202,21 +111,19 @@ export default {
           }
         })
         .then(response => {
-          console.log(response.data)
-          this.tableData = response.data.bookData
-          this.page = response.data.page
-          this.total = response.data.count
+          console.log(response.data.results)
+          this.tableData = response.data.results.bookData
+          this.page = parseInt(response.data.results.page)
+          this.total = response.data.results.count
         })
     },
     findBooks() {
-      this.axios
-        .get(`/bookabout/isbn_page/${this.filterForm.ISBN}`)
-        .then(response => {
-          console.log(response.data)
-          this.tableData = response.data.bookData
-          this.page = response.data.page
-          this.total = response.data.count
-        })
+      this.axios.get(`/bookabout/isbn_page/${this.filterForm.ISBN}`).then(response => {
+        console.log(response.data.results)
+        this.tableData = response.data.resultsbookData
+        this.page = 1
+        this.total = response.data.results.count
+      })
     },
     getOnSaleList() {
       this.axios
@@ -226,10 +133,10 @@ export default {
           }
         })
         .then(response => {
-          console.log(response.data)
-          this.tableData = response.data.bookData
-          this.page = response.data.page
-          this.total = response.data.count
+          console.log(response.data.results)
+          this.tableData = response.data.results.bookData
+          this.page = parseInt(response.data.results.page)
+          this.total = response.data.results.count
         })
     },
     getOutList() {

@@ -1,6 +1,6 @@
 const multer = require("multer")
 const path = require("path")
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const moment = require("moment")
 
 

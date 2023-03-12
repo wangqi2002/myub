@@ -1,4 +1,4 @@
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const verToken = require("../token/token")
 const axios = require("axios")
 const LoginService = {

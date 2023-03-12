@@ -138,7 +138,7 @@ const BookAboutController = {
     },
 
     getBook_isbn_page: async (req, res) => {
-        // console.log(req.params.id)
+        console.log(req.params.id)
         await BookAboutService.getBook_isbn_page(req.params.id, (results) => {
             // 以json的形式返回
             res.json({ results })

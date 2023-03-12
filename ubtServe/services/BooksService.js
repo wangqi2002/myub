@@ -1,4 +1,4 @@
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const axios = require("axios")
 const fs = require("fs")
 const path = require("path")

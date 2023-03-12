@@ -1,4 +1,4 @@
-const conn = require("../model/conn")
+const conn = require("../model/connectionRequest")
 const AdminService = {
     addAdmin: ({ admin_account, admin_name, admin_login_password, admin_permission }, callback) => {
         let admin_id = new Date().getTime() + Math.random().toString(36).substring(3, 10);
