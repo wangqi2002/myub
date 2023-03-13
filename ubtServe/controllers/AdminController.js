@@ -2,9 +2,8 @@ const AdminService = require("../services/AdminService")
 const path = require("path")
 const AdminController = {
     addAdmin: async (req, res) => {
-        // console.log(req.body)
-
-        await AdminService.addAdmin(req.body, (result) => {
+        console.log(req.body.user)
+        await AdminService.addAdmin(req.body.user, (result) => {
             res.send(result)
         });
     },
@@ -39,7 +38,8 @@ const AdminController = {
     },
 
     deleteAdmin: async (req, res) => {
-        await AdminService.deleteAdmin(req.params.id, (results) => {
+        console.log(req.body)
+        await AdminService.deleteAdmin(req.body, (results) => {
             // 以json的形式返回
             res.send(results)
         })

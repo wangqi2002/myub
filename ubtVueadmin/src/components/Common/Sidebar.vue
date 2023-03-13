@@ -15,24 +15,24 @@
         <i class="fa fa-tachometer"></i>
         <span>后台主页</span>
       </el-menu-item>
-      <el-menu-item index="/dashboard/order">
-        <i class="fa fa-large fa-reorder"></i>
-        <span>订单列表</span>
-      </el-menu-item>
-      <el-submenu index="goods">
+      <el-submenu index="order">
         <template slot="title">
           <i class="fa fa-shopping-bag"></i>
-          <span>商品管理</span>
+          <span>订单管理</span>
         </template>
-        <el-menu-item index="/dashboard/goods">
+        <el-menu-item index="/dashboard/order">
+          <i class="fa fa-circle"></i>
+          <span>买家订单</span>
+        </el-menu-item>
+        <el-menu-item index="/dashboard/ordersell">
+          <i class="fa fa-circle"></i>
+          <span>卖家订单</span>
+        </el-menu-item>
+      </el-submenu>
+      <el-menu-item index="/dashboard/goods">
           <i class="fa fa-circle"></i>
           <span>商品列表</span>
         </el-menu-item>
-        <el-menu-item index="/dashboard/nature">
-          <i class="fa fa-circle"></i>
-          <span>商品设置</span>
-        </el-menu-item>
-      </el-submenu>
       <el-menu-item index="/dashboard/user">
         <i class="fa fa-large fa-users"></i>
         <span>用户列表</span>

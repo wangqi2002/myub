@@ -4,30 +4,21 @@
       <el-breadcrumb class="breadcrumb" separator="/">
         <el-breadcrumb-item>管理员</el-breadcrumb-item>
       </el-breadcrumb>
-      <!-- <div class="operation-nav">
-				<router-link to="/dashboard/user">
-					<el-button type="primary" icon="plus">添加管理员</el-button>
-				</router-link>
-			</div> -->
+      <div class="operation-nav">
+        <router-link :to="{ name: 'admin_add' }">
+          <el-button type="primary" icon="plus">添加管理员</el-button>
+        </router-link>
+      </div>
     </div>
     <div class="content-main">
       <div class="form-table-box">
         <el-table :data="tableData" style="width: 100%" border stripe>
-          <el-table-column prop="id" label="ID" width="60"></el-table-column>
-          <el-table-column prop="username" label="会员名称"></el-table-column>
-          <el-table-column prop="last_login_time" label="最近登录" width="200"></el-table-column>
-          <el-table-column prop="last_login_ip" label="登录IP" width="200"></el-table-column>
+          <el-table-column prop="admin_account" label="账号" width="160"></el-table-column>
+          <el-table-column prop="admin_name" label="管理员名称"></el-table-column>
+          <el-table-column prop="admin_permission" label="管理员身份"></el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button size="small" @click="handleRowEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button
-                v-if="scope.row.id != loginInfo.id"
-                plain
-                size="small"
-                type="danger"
-                @click="handleRowDelete(scope.$index, scope.row)"
-                >删除</el-button
-              >
+              <el-button size="small" type="danger" @click="handleRowDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -50,19 +41,16 @@ export default {
     }
   },
   methods: {
-    handleRowEdit(index, row) {
-      this.$router.push({ name: 'admin_add', query: { id: row.id } })
-    },
     handleRowDelete(index, row) {
-      console.log(row)
+      // console.log(row)
       this.$confirm('确定要删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.axios.post('admin/deleAdmin', { id: row.id }).then(response => {
-          console.log(response.data)
-          if (response.data.errno === 0) {
+        this.axios.post('/admin/deleAdmin', { admin_account: row.admin_account }).then(response => {
+          // console.log(response.data)
+          if (response.data.code === 1) {
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -72,12 +60,8 @@ export default {
         })
       })
     },
-    onSubmitFilter() {
-      this.page = 1
-      this.getList()
-    },
     getList() {
-      this.axios.get('admin').then(response => {
+      this.axios.get('/admin/getAdmin').then(response => {
         this.tableData = response.data.data
         console.log(this.tableData)
       })

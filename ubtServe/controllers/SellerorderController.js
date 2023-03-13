@@ -33,8 +33,16 @@ const SellerorderController = {
     },
 
     getOrder_status: async (req, res) => {
-        // console.log(req.params.id)
+        // console.log(req.query)
         await SellerorderService.getOrder_status(req.query, (results) => {
+            // 以json的形式返回
+            res.json({ results })
+        })
+    },
+
+    getOrder_status_page: async (req, res) => {
+        console.log(req.query)
+        await SellerorderService.getOrder_status_page(req.query, (results) => {
             // 以json的形式返回
             res.json({ results })
         })

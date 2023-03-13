@@ -1,15 +1,15 @@
 const conn = require("../model/connectionRequest")
 const AdminService = {
-    addAdmin: ({ admin_account, admin_name, admin_login_password, admin_permission }, callback) => {
+    addAdmin: ({ account, username, password, permission }, callback) => {
         let admin_id = new Date().getTime() + Math.random().toString(36).substring(3, 10);
-        console.log(admin_id, admin_account, admin_name, admin_login_password, admin_permission);
+        console.log(admin_id, account, username, password, permission);
 
         let sql_insert = `INSERT INTO admin VALUES(?,?,?,?,?)`;
-        let sql_insertParams = [admin_id, admin_account, admin_name, admin_login_password, admin_permission];
+        let sql_insertParams = [admin_id, account, username, password, permission];
         let sql_look_account = `SELECT * FROM admin WHERE admin_account = ?`
 
         try {
-            conn.query(sql_look_account, admin_account, (err, result) => {
+            conn.query(sql_look_account, account, (err, result) => {
                 if (err) {
                     throw err
                 }
@@ -130,12 +130,12 @@ const AdminService = {
         }
     },
 
-    deleteAdmin: (admin_id, callback) => {
+    deleteAdmin: ({admin_account}, callback) => {
 
-        let sql_delete = `delete from admin where admin_id=?`;
+        let sql_delete = `delete from admin where admin_account=?`;
 
         try {
-            conn.query(sql_delete, admin_id, (err, results) => {
+            conn.query(sql_delete, admin_account, (err, results) => {
                 // console.log(results, "444");
                 if (err) {
                     callback({ code: 0, value: "删除失败！" })

@@ -11,7 +11,9 @@ router.post("/update_name", AdminController.update_name)
 router.post("/update_permission", AdminController.update_permission)
 //获取管理员列表
 router.get("/getAdmin", AdminController.getAdmin)
+//获取管理员列表 分页
+// router.get("/getAdmin_page", AdminController.getAdmin_page)
 //删除管理员
-router.delete("/:id", AdminController.deleteAdmin)
+router.post("/deleAdmin", AdminController.deleteAdmin)
 
 module.exports = router;

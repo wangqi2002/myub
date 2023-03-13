@@ -107,7 +107,7 @@ const SellerorderService = {
     },
 
     getOrder_status: ({ sellerorder_status }, callback) => {
-        console.log(sellerorder_status);
+        // console.log(sellerorder_status);
         let sql_find = `select * from sellerorder where sellerorder_status=?`;
 
         try {
@@ -120,6 +120,72 @@ const SellerorderService = {
                     callback(
                         results ? JSON.parse(JSON.stringify(results)) : null
                     )
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    getOrder_status_page: ({ page, orderSn, consignee, status }, callback) => {
+        // console.log(typeof status)
+        let sql_find_total =
+            `select COUNT(*) AS count from (select * from sellerorder where FIND_IN_SET (sellerorder_status,?)) as a`;
+
+        let sql_find = `select * from sellerorder where FIND_IN_SET (sellerorder_status,?)`
+        let sql_find_book = `select sellerorder_bookid from sellerorder where  FIND_IN_SET (sellerorder_status,?)`
+        let sql_find_user = `select sellerorder_sellerid from sellerorder where  FIND_IN_SET (sellerorder_status,?)`
+
+
+        if (orderSn !== '' && orderSn !== undefined) {
+            sql_find = sql_find + " and sellerorder_sellerid = '" + orderSn + "'"
+            sql_find_book = sql_find_book + " and sellerorder_sellerid = '" + orderSn + "'"
+            sql_find_user = sql_find_user + " and sellerorder_sellerid = '" + orderSn + "'"
+        }
+        if (consignee !== '' && consignee !== undefined) {
+            sql_find = sql_find + " and sellerorder_sellerid in (SELECT user_id FROM User where user_nickname like '%" +
+                consignee + "%')"
+            sql_find_book = sql_find_book + " and sellerorder_sellerid in (SELECT user_id FROM User where user_nickname like '%" +
+                consignee + "%')"
+            sql_find_user = sql_find_user + " and sellerorder_sellerid in (SELECT user_id FROM User where user_nickname like '%" +
+                consignee + "%')"
+        }
+
+        let sql_find_all =
+            `SELECT * FROM (SELECT * FROM (${sql_find}) a LEFT JOIN (select user_id,user_nickname,user_telphone,user_image from user where user_id in (${sql_find_user})) b on a.sellerorder_sellerid=b.user_id) m LEFT JOIN (SELECT * FROM (select * from bookabout WHERE bookA_id in (${sql_find_book})) a JOIN books b ON a.bookA_isbn=b.book_isbn) n ON m.sellerorder_bookid=n.bookA_id`
+        sql_find_all = sql_find_all + ' LIMIT 6 OFFSET ?'
+
+        // console.log(sql_find_all)
+        let offsets = (parseInt(page) - 1) * 6
+        let sql_totalParams = [status];
+        let sql_findParams = [status, status, status, offsets];
+        let result = { count: null, orderData: null, page: page };
+
+        try {
+            conn.query(sql_find_total, sql_totalParams, function (err, results1) {
+                if (err) {
+                    throw err
+                }
+                console.log(results1)
+                result.count = results1[0].count
+                if (results1[0].count > 0) {
+                    conn.query(sql_find_all, sql_findParams, function (err, results2) {
+                        if (err) {
+                            throw err
+                        }
+                        result.orderData = results2
+                        // console.log(result)
+                        //将查询出来的数据返回给回调函数
+                        callback &&
+                            callback(
+                                result ? JSON.parse(JSON.stringify(result)) : null
+                            )
+                    })
+                } else {
+                    callback &&
+                        callback(
+                            result ? JSON.parse(JSON.stringify(result)) : null
+                        )
+                }
             })
         } catch (error) {
             console.log(error);

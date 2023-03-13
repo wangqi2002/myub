@@ -50,7 +50,7 @@
               <div class="user-wrap">
                 <div class="avatar-wrap">
                   <img :src="item.user_image" class="avatar-img" />
-                  <div class="nickname">{{ item.nickname }}</div>
+                  <div class="nickname">{{ item.user_nickname }}</div>
                 </div>
                 <div class="mobile">手机：{{ item.user_telphone }}</div>
               </div>
@@ -237,17 +237,6 @@ export default {
   align-items: center;
 }
 
-.off-text {
-  color: #fff;
-  border-radius: 4px;
-  background: #594d72;
-  height: 15px;
-  line-height: 15px;
-  padding: 4px 10px;
-  font-size: 12px;
-  margin-right: 10px;
-}
-
 .status-text {
   color: #f0797f;
   margin-right: 10px;
@@ -265,11 +254,6 @@ export default {
 .price-wrap {
   float: right;
   margin-right: 20px;
-}
-
-.edit-wrap {
-  float: right;
-  margin-top: 5px;
 }
 
 .content-wrap {
@@ -356,35 +340,6 @@ export default {
   padding-top: 0;
 }
 
-.dialog-wrap .list-wrap {
-  margin-bottom: 10px;
-  padding: 10px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.dialog-wrap .goods-list {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  /*margin-bottom:20px;*/
-  /*border-bottom:1px solid #d1dbe5;*/
-}
-
-.dialog-wrap .main {
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #d1dbe5;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.dialog-wrap .main div {
-  font-size: 14px;
-}
-
 .goods-name {
   color: #5e7382;
   font-size: 14px;
@@ -420,19 +375,6 @@ export default {
   justify-content: flex-start;
 }
 
-.dialog-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /*background: #f6fdff;*/
-  border-bottom: 1px solid #f1f1f1;
-}
-
-.other {
-  /*background: #f1f1f1;*/
-  border-top: none;
-}
-
 .user-name {
   color: #000000;
   font-size: 14px;
@@ -456,44 +398,11 @@ export default {
   justify-content: flex-start;
 }
 
-
-.detail {
-  padding: 10px 0;
-}
-
-.receive-detail {
-  padding: 10px 0;
-}
-
 .el-input {
   width: 300px;
-}
-
-.senderAddressInput {
-  width: 530px !important;
-  margin-bottom: 10px;
-}
-
-.el-checkbox {
-  margin-bottom: 22px;
-  margin-right: 20px;
-}
-
-.express-info {
-  padding: 10px;
-  color: #ff3456;
-  font-size: 14px;
-  line-height: 20px;
-  margin-bottom: 10px;
-  background: #f0f0f0;
 }
 
 .el-form-item {
   margin-bottom: 10px;
 }
-
-/*.express-dialog{*/
-/*display: flex;*/
-/*!*justify-content: center;*!*/
-/*}*/
 </style>

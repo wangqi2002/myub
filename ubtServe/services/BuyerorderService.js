@@ -171,7 +171,7 @@ const BuyerorderService = {
     },
 
     getOrder_status_page: ({ page, orderSn, consignee, status }, callback) => {
-        console.log(typeof status)
+        // console.log(typeof status)
         let sql_find_total = `select COUNT(*) AS count from (select * from buyerorder where FIND_IN_SET (buyerorder_status,?)) as a`;
 
         let sql_find = `select * from buyerorder where FIND_IN_SET (buyerorder_status,?)`
@@ -207,7 +207,7 @@ const BuyerorderService = {
                 if (err) {
                     throw err
                 }
-                console.log(results1)
+                // console.log(results1)
                 result.count = results1[0].count
                 if (results1[0].count > 0) {
                     conn.query(sql_find_all, sql_findParams, function (err, results2) {
