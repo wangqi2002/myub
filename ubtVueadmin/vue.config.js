@@ -17,7 +17,6 @@ const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 module.exports = {
   publicPath: '/',
   outputDir: 'dist',
-  assetsDir: 'static',
   // eslint-loader 是否在保存的时候检查
   lintOnSave: !isOnline,
   productionSourceMap: !isOnline,
@@ -30,9 +29,9 @@ module.exports = {
     },
     proxy: {
         '/node': {
-            // target: 'https://serve.sirbook.top',
+            target: 'https://serve.sirbook.top',
             // target: 'http://47.113.229.104:4000',
-            target: 'http://localhost:4000',
+            // target: 'http://localhost:4000',
             ws: true,
             changeOrigin: true,
             pathRewrite: {

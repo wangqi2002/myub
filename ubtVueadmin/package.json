@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "BUILD_FOR=production vue-cli-service build",
+    "build": "vue-cli-service build",
     "build:test": "BUILD_FOR=test vue-cli-service build",
     "new": "plop",
     "lint": "vue-cli-service lint",
