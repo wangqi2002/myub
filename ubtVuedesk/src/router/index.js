@@ -17,6 +17,7 @@ import Order from "../components/Order"
 import MyOrder from "../components/accounts/MyOrder"
 import ChartTest from "../components/ChartTest"
 import Collection from "../components/Collection"
+import Pay from "../components/pay"
 
 
 
@@ -45,6 +46,13 @@ const routes = [
         name: "mypurse",
         components: {
           container: MyPurse
+        }
+      },
+      {
+        path: "/pay",
+        name: "pay",
+        components: {
+          container: Pay
         }
       },
       {

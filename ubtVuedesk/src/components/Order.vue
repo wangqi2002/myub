@@ -28,7 +28,10 @@
         <div class="book_wrap">
           <div class="cover">
             <!-- <img :src="'/node' + book_detail.book_cover" alt="" /> -->
-            <img :src="'https://serve.sirbook.top' + book_detail.book_cover" alt="" />
+            <img
+              :src="'https://serve.sirbook.top' + book_detail.book_cover"
+              alt=""
+            />
           </div>
           <div class="book_content">
             <p>
@@ -41,16 +44,31 @@
         </div>
         <!-- 付款按钮 -->
         <button class="payment" @click="handerPlOrder()">付款</button>
+        <!-- 分享展示, 预览的二维码的弹层  -->
+        <el-dialog
+          title="微信支付二维码"
+          :visible="showCodeDialog"
+          @close="showCodeDialog = false"
+        >
+          <!-- 二维码 -->
+          <!--放个容器控制一下居中-->
+          <el-row type="flex" justify="center">
+            <div id="qrcode" ref="qrcode"></div>
+          </el-row>
+        </el-dialog>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import QRCode from "qrcodejs2";
 export default {
   name: "Order",
+  components: { QRCode },
   data() {
     return {
+      showCodeDialog: false,
       addressTrue: this.$store.state.userInfo.user_loacation,
       book_detail: {},
       selectValue: "微信支付",
@@ -76,8 +94,20 @@ export default {
       this.display = false;
       this.$refs.select_list.style.display = "none";
     },
+    qrcode(url) {
+      let qrcode = new QRCode("qrcode", {
+        width: 232, // 设置宽度
+        height: 232, // 设置高度
+        text: url,
+      });
+    },
     async handerPlOrder() {
-      await this.$axios
+      this.showCodeDialog = true;
+      this.$nextTick(() => {
+        let url = "https://baidu.com";
+        this.qrcode(url);
+      });
+      /* await this.$axios
         .post("/node/buyerorder", {
           buyerorder_buyerid: this.$store.state.userInfo.user_id,
           buyerorder_bookid: this.book_detail.bookA_id,
@@ -112,7 +142,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-        });
+        }); */
     },
   },
   computed: {},
@@ -129,7 +159,7 @@ export default {
   box-sizing: border-box;
   .order_wrap {
     max-width: 700px;
-    height: 600px;
+    height: 700px;
     margin: 40px auto;
     border: 1px solid #333;
     box-shadow: 0 0 10px #eee;

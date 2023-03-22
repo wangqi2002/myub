@@ -4,7 +4,10 @@ const router = express.Router();
 
 // 用户登录
 router.post("/userLogin", LoginController.userLogin)
+// 用户登录 验证码
 router.post("/userLoginS", LoginController.userLoginS)
+// 用户登录 微信
+router.post("/userLoginW", LoginController.userLoginW)
 // 管理员登录
 router.post("/adminLogin", LoginController.adminLogin)
 // 用户免登录

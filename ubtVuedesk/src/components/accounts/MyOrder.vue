@@ -60,7 +60,7 @@ export default {
     },
   },
   async mounted() {
-    console.log(this.$store.state.userInfo.user_id);
+    // console.log(this.$store.state.userInfo.user_id);
     await this.$axios
       .get(`/node/buyerorder/buyer_id/${this.$store.state.userInfo.user_id}`)
       .then((res) => {

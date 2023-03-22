@@ -38,7 +38,7 @@ const UserController = {
     },
 
     changeAvater: async (req, res) => {
-        // console.log(req.file, req.params.id)
+        console.log(req.file, req.params.id)
         upload(req, res, function (err) {
             if (err instanceof multer.MulterError) {
                 //上传错误
@@ -112,8 +112,16 @@ const UserController = {
         })
     },
 
+    getUserInfoW: async (req, res) => {
+        // console.log(req.body)
+        await UserService.getUserInfoW(req.body, (result) => {
+            // console.log(result)
+            res.send(result)
+        })
+    },
+
     updateNoHeadInfo: async (req, res) => {
-      console.log(req.body)
+    //   console.log(req.body)
       await UserService.updateNoHeadInfo(req.body, (results) => {
         // 以json的形式返回
         res.send(results)

@@ -117,8 +117,8 @@ export default {
           class: "classify_item",
         },
         {
-          value: "成人教育",
-          label: "成人教育",
+          value: "教育",
+          label: "教育",
           class: "classify_item",
         },
         {

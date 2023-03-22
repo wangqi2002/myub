@@ -137,7 +137,7 @@ export default {
             this.$message.error("您还未登录哦！");
             break;
           }
-          this.$router.push({ path: "/chart" });
+          this.$router.push({ path: "/pay" });
           break;
         default:
           break;

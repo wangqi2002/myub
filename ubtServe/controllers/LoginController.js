@@ -2,6 +2,7 @@ const LoginService = require("../services/LoginService")
 const UserService = require("../services/UserService")
 const AdminService = require("../services/AdminService")
 const verToken = require("../token/token")
+
 const LoginController = {
     userLogin: async (req, res) => {
         // console.log(req.body)
@@ -21,6 +22,20 @@ const LoginController = {
         await UserService.loginUserS(req.body, (result) => {
             if (result.code) {
                 verToken.setToken(result.data.user_id).then(token => {
+                    res.send({ code: 1, value: "登陆成功", token: token, data: result.data })
+                })
+            } else {
+                res.send(result)
+            }
+        });
+    },
+
+    userLoginW: async (req, res) => {
+        console.log(req.body)
+        await UserService.loginUserW(req.body, (result) => {
+            // console.log(result)
+            if (result.code) {
+                verToken.setToken(result.data.openid).then(token => {
                     res.send({ code: 1, value: "登陆成功", token: token, data: result.data })
                 })
             } else {

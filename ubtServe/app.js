@@ -18,6 +18,7 @@ var buyerorderRouter = require('./routes/buyerorder');
 var sellerorderRouter = require('./routes/sellerorder');
 var recordRouter = require('./routes/record');
 var recordChart = require('./routes/recordChart');
+var payRouter = require('./routes/pay');
 
 var app = express();
 var io = require('socket.io')(http);
@@ -72,6 +73,7 @@ app.use('/buyerorder', buyerorderRouter);
 app.use('/sellerorder', sellerorderRouter);
 app.use('/record', recordRouter);
 app.use('/chart', recordChart);
+app.use('/pay', payRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

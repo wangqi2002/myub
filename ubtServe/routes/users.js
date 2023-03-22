@@ -8,6 +8,8 @@ router.post("/", UserController.addUser)
 router.post("/addUserWeChat", UserController.addUserWeChat)
 //获取用户信息
 router.post("/getUserInfo", UserController.getUserInfo)
+//获取用户信息  微信
+router.post("/getUserInfoW", UserController.getUserInfoW)
 //更新用户信息
 router.post("/updateNoHeadInfo", UserController.updateNoHeadInfo)
 router.post("/updateInfo", upload_userImg.single("user_image"), UserController.updateInfo)

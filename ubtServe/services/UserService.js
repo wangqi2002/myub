@@ -1,5 +1,12 @@
 const conn = require("../model/connectionRequest")
 const SMSClient = require('@alicloud/sms-sdk');
+const axios = require("axios")
+
+// 开发者信息
+const wx = {
+    appid: 'wx54163a3a6b4bfbc6',  // 填写用户自己的appid
+    secret: '4a54f54f7a4499b39bab46a621ec4414'  // 填写用户自己的密钥
+}
 
 const UserService = {
     addUser: ({ user_login_password, user_telphone }, callback) => {
@@ -7,7 +14,7 @@ const UserService = {
         let user_registration_time = new Date();
         let user_nickname = "无名";
         let user_loacation = "暂无收货地址";
-        let user_image = `/node/images/userImg/default.png`
+        let user_image = `/images/userImg/default.png`
 
         console.log(user_id, user_image, user_telphone, user_login_password, user_registration_time, user_nickname, user_loacation)
 
@@ -40,25 +47,40 @@ const UserService = {
         }
     },
 
-    addUserWeChat: ({ user_id }, callback) => {
+    addUserWeChat: ({ user_weichat }, callback) => {
+        let user_id = new Date().getTime() + Math.random().toString(36).substring(2);
+        let user_registration_time = new Date();
+        let user_nickname = "无名";
+        let user_loacation = "暂无收货地址";
         let user_image = `/images/userImg/default.png`
-        console.log('service say:', user_id);
-        // console.log(user_login_account, user_login_password, user_telphone, user_id);
 
-        let sql_insert = `INSERT INTO user (user_id,user_image) VALUES(?,?)`;
-        let sql_insertParams = [user_id, user_image];
+        console.log(user_id, user_image, user_registration_time, user_nickname, user_loacation, user_weichat)
 
-        conn.query(sql_insert, sql_insertParams, (err, results2) => {
-            console.log(results2, "444");
-            if (err) callback({
-                code: 0,
-                value: "注册失败！"
+        let sql_insert = `INSERT INTO user (user_id,user_nickname,user_image,user_registration_time,user_weichat,user_loacation) VALUES(?,?,?,?,?,?)`;
+        let sql_insertParams = [user_id, user_nickname, user_image, user_registration_time, user_weichat, user_loacation];
+
+        let sql_look_tele = `SELECT * FROM USER WHERE user_weichat = ?`
+
+        try {
+            conn.query(sql_look_tele, user_weichat, (err, result1) => {
+                if (err) {
+                    throw err
+                }
+                if (result1.length) callback({ code: 0, value: "该微信已经被注册！" })
+                else {
+                    conn.query(sql_insert, sql_insertParams, (err1, results2) => {
+                        if (err1) {
+                            throw err1
+                        }
+                        // console.log(results2, "444");
+                        if (err) callback({ code: 0, value: "注册失败！" })
+                        else callback({ code: 1, value: "注册成功" })
+                    })
+                }
             })
-            else callback({
-                code: 1,
-                value: "注册成功"
-            })
-        })
+        } catch (error) {
+            console.log(error);
+        }
     },
 
     changeAvaterw: (user_id, user_image, callback) => {
@@ -184,14 +206,13 @@ const UserService = {
     },
 
     getUserInfo: ({ user_id }, callback) => {
-        console.log(user_id);
+        // console.log(user_id);
         let sql_find = `select * from User where user_id=?`;
         try {
             conn.query(sql_find, user_id, function (err, results) {
                 if (err) {
                     throw err
                 }
-                //1659081249999z0vxy0lp1yj
                 // console.log(results)
                 //将查询出来的数据返回给回调函数
                 callback &&
@@ -204,34 +225,44 @@ const UserService = {
         }
     },
 
-    updateNoHeadInfo: ({
-        // user_id,
-        user_nickname,
-        user_name,
-        user_telphone,
-        user_loacation,
-        user_weichat
-    }, callback) => {
-        console.log(user_weichat + "====" + user_nickname, user_name, user_telphone, user_loacation);
+    getUserInfoW: ({ user_weichat }, callback) => {
+        // console.log(user_weichat);
+        let sql_find = `select * from User where user_weichat=?`;
+        try {
+            conn.query(sql_find, user_weichat, function (err, results) {
+                if (err) {
+                    throw err
+                }
+                // console.log(results)
+                //将查询出来的数据返回给回调函数
+                callback &&
+                    callback(
+                        results ? JSON.parse(JSON.stringify(results)) : null
+                    )
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    updateNoHeadInfo: ({ nickname, name, telphone, loacation, weichat }, callback) => {
+        // console.log(weichat + "====" + nickname, name, telphone, loacation);
 
         let sql_update = `UPDATE User set user_nickname=?,user_name=?,user_telphone=?,user_loacation=? where user_weichat=?`;
-        let sql_updateParams = [user_nickname, user_name, user_telphone, user_loacation, user_weichat];
+        let sql_updateParams = [nickname, name, telphone, loacation, weichat];
         let sql_look_id = `SELECT * FROM USER WHERE user_weichat= ?`
-        conn.query(sql_look_id, user_weichat, (err1, result1) => {
+        conn.query(sql_look_id, weichat, (err1, result1) => {
             if (err1) {
                 throw err1
             }
-            console.log(result1);
-            if (!result1.length) callback({
-                code: 0,
-                value: "该用户不存在！"
-            })
+            // console.log(result1);
+            if (!result1.length) callback({ code: 0, value: "该用户不存在！" })
             else {
                 conn.query(sql_update, sql_updateParams, (err2, results2) => {
                     if (err2) {
                         throw err2
                     }
-                    console.log(results2, "444");
+                    // console.log(results2, "444");
                     if (err2) callback({
                         code: 0,
                         value: "更新失败！"
@@ -393,13 +424,13 @@ const UserService = {
     findUser: ({ nickname }, callback) => {
         let sql_find_total = `select COUNT(*) AS count from User where user_nickname like ?`;
         let sql_find = `SELECT * FROM User where user_nickname like ?`;
-        let sql_findParams = [('%'+nickname+'%')];
+        let sql_findParams = [('%' + nickname + '%')];
         // console.log(sql_findParams)
 
         let result = { count: null, userData: null, page: 1 };
 
         try {
-            conn.query(sql_find_total,sql_findParams, function (err, results1, fields) {
+            conn.query(sql_find_total, sql_findParams, function (err, results1, fields) {
                 if (err) {
                     throw err
                 }
@@ -421,9 +452,9 @@ const UserService = {
                     })
                 } else {
                     callback &&
-                    callback(
-                        result ? JSON.parse(JSON.stringify(result)) : null
-                    )
+                        callback(
+                            result ? JSON.parse(JSON.stringify(result)) : null
+                        )
                 }
             })
         } catch (error) {
@@ -527,6 +558,17 @@ const UserService = {
         } catch (error) {
             console.log(error);
         }
+    },
+
+    loginUserW: async ({ code }, callback) => {
+        var url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + wx.appid + '&secret=' + wx.secret + '&js_code=' + code + '&grant_type=authorization_code'
+
+        let result = await axios.get(url)
+        // console.log("data:", result.data)
+        if ('openid' in result.data)
+            callback({ code: 1, value: "登陆成功", data: result.data })
+        else
+            callback({ code: 0, value: "登陆失败", data: result.data })
     }
 }
 
