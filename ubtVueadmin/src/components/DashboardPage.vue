@@ -44,8 +44,7 @@ export default {
     return {}
   },
   components: {
-    Sidebar,
-    Navbar
+    Sidebar
   },
   methods: {
     handleOpen(key, keyPath) {
