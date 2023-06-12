@@ -2,5 +2,6 @@
 **/dist/
 **/package-lock.json
 connectionsConfig.json
+Config.json
 *.zip
 *.pem
