@@ -3,3 +3,4 @@
 **/package-lock.json
 connectionsConfig.json
 *.zip
+**/*.pem
