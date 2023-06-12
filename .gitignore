@@ -1,7 +1,5 @@
-ubtVueadmin/node_modules/
-ubtServe/node_modules/
-ubtVuedesk/node_modules/
-ubtVueadmin/dist/
-ubtVuedesk/dist/
+**/node_modules/
+**/dist/
+**/package-lock.json
 connectionsConfig.json
 *.zip
