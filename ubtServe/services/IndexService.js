@@ -15,7 +15,9 @@ const IndexService = {
     pay: async (callback) => {
         callback({ code: 1, value: "到达" })
     },
-    payCs: async (callback) => {
+    payCs: async ({ description, total }, callback) => {
+        total *= 1000
+        console.log("index", description, total)
         let orderId = createRandomString(18)
         const params = {
             description: '测试',

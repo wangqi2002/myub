@@ -8,13 +8,11 @@ const IndexController = {
         });
     },
     payCs: async (req, res) => {
-        // console.log(req.body)
-        await IndexService.payCs((result) => {
+        await IndexService.payCs(req.body, (result) => {
             res.send(result)
         });
     },
     payCsback: async (req, res) => {
-        // console.log(req.body)
         await IndexService.payCsback(req.body, (result) => {
             res.send(result)
         });

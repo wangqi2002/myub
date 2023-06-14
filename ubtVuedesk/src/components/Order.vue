@@ -131,7 +131,7 @@ export default {
       await this.$axios
         .post("/node/payCS", {
           description: _this.book_detail.book_name,
-          total: 1,
+          total: _this.book_detail.bookA_price,
         })
         .then((res) => {
           this.orderId = res.data.orderId
