@@ -20,7 +20,7 @@ const IndexService = {
         console.log("index", description, total)
         let orderId = createRandomString(18)
         const params = {
-            description: '测试',
+            description: description,
             out_trade_no: orderId,
             notify_url: 'https://serve.sirbook.top',
             amount: {

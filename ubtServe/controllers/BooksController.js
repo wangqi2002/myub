@@ -1,9 +1,6 @@
 const BooksService = require("../services/BooksService")
 const BooksController = {
     addBook: async (req, res) => {
-        // console.log(req.body)
-        // console.log("#####")
-
         await BooksService.addBook(req.body, (result) => {
             res.send(result)
         });

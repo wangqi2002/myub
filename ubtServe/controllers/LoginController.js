@@ -31,7 +31,6 @@ const LoginController = {
     },
 
     userLoginW: async (req, res) => {
-        console.log(req.body)
         await UserService.loginUserW(req.body, (result) => {
             // console.log(result)
             if (result.code) {

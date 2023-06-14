@@ -135,7 +135,7 @@ export default {
   },
   methods: {
     handleAvatarSuccess(obj, res, file) {
-      this.imageUrl = "/node/images/userImg/" + res.response.data.filename;
+      this.imageUrl = "/images/userImg/" + res.response.data.filename;
     },
     // 封面图片上传前个钩子函数
     beforeAvatarUpload(file) {
