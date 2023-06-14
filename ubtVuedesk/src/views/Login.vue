@@ -9,84 +9,38 @@
           <p @click="handerTab" class="p1 active">密码登录</p>
           <p @click="handerTab" class="p2">短信登录</p>
         </div>
-        <el-form
-          :model="ruleForm"
-          status-icon
-          :rules="rules"
-          ref="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-          v-if="tabBol"
-        >
-          <el-form-item
-            label="手机号"
-            prop="user_telphone"
-            class="el_input_book"
-          >
-            <el-input
-              type="text"
-              v-model="ruleForm.user_telphone"
-              autocomplete="off"
-              placeholder="手机号码"
-              class="input_place"
-            >
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm"
+          v-if="tabBol">
+          <el-form-item label="手机号" prop="user_telphone" class="el_input_book">
+            <el-input type="text" v-model="ruleForm.user_telphone" autocomplete="off" placeholder="手机号码"
+              class="input_place">
             </el-input>
             <img class="single_img" src="@/assets/imgs/login_user.png" alt="" />
           </el-form-item>
-          <el-form-item
-            label="密码"
-            prop="user_login_password"
-            class="el_input_book"
-          >
-            <el-input
-              type="password"
-              v-model="ruleForm.user_login_password"
-              autocomplete="off"
-              placeholder="密码"
-              class="input_place"
-            ></el-input>
+          <el-form-item label="密码" prop="user_login_password" class="el_input_book">
+            <el-input type="password" v-model="ruleForm.user_login_password" autocomplete="off" placeholder="密码"
+              class="input_place"></el-input>
             <img src="@/assets/imgs/login_pass.png" alt="" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitFormM('ruleForm')"
-              >登录</el-button
-            >
+            <el-button type="primary" @click="submitFormM('ruleForm')">登录</el-button>
           </el-form-item>
         </el-form>
-        <el-form
-          :model="ruleForm"
-          status-icon
-          :rules="rules"
-          ref="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
-          v-else
-        >
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm"
+          v-else>
           <el-form-item label="手机号" prop="newTele" class="el_input_book">
-            <el-input
-              type="text"
-              v-model="ruleForm.user_telphone"
-              autocomplete="off"
-              placeholder="请输入手机号码"
-              class="input_place"
-            >
+            <el-input type="text" v-model="ruleForm.user_telphone" autocomplete="off" placeholder="请输入手机号码"
+              class="input_place">
             </el-input>
             <img class="single_img" src="@/assets/imgs/login_user.png" alt="" />
           </el-form-item>
           <el-form-item label="验证码" prop="svg" class="svg">
-            <el-input
-              type="text"
-              v-model="ruleForm.svg"
-              autocomplete="off"
-              placeholder="请输入验证码"
-              class="svg_item"
-            ></el-input>
+            <el-input type="text" v-model="ruleForm.svg" autocomplete="off" placeholder="请输入验证码"
+              class="svg_item"></el-input>
             <div class="getSvg" @click="handerSvg">获取验证码</div>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitFormS('ruleForm')"
-              >登录</el-button
-            >
+            <el-button type="primary" @click="submitFormS('ruleForm')">登录</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -115,7 +69,7 @@ export default {
     var validateSvg = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入验证码"));
-      } else if (this.text != value) {
+      } else if (this.ruleForm.text != value) {
         callback(new Error("验证码输入错误"));
       } else {
         callback();
@@ -198,20 +152,13 @@ export default {
   methods: {
     handerTab(e) {
       let childTabs = this.$refs.tab.childNodes;
-      // console.log(this.$refs.tab);
       for (let i = 0; i < childTabs.length; i++) {
         if (childTabs[i].getAttribute("class")) {
-          // console.log(childTabs[i]);
-          // console.log(childTabs[i].classList.length);
-          /* if (childTabs[i].classList.length == 1) {
-            console.log(i, "--yes--", childTabs[i]);
-          } */
           childTabs[i].classList.remove("active");
         }
       }
       this.tabBol = !this.tabBol;
       e.target.classList.add("active");
-      // console.log(e.target);
     },
     //获取短信验证码
     async handerSvg() {
@@ -220,9 +167,8 @@ export default {
       let { data } = await this.$axios.post("/node/user/getSvg", {
         user_telphone: this.ruleForm.user_telphone,
       });
-      this.text = data;
-      // this.text = data.sms;
-      console.log(data);
+      this.ruleForm.text = data;
+      console.log("login", data);
     },
     // 处理登录
     submitFormM(formName) {
@@ -232,7 +178,7 @@ export default {
             user_telphone: this.ruleForm.user_telphone,
             user_login_password: this.ruleForm.user_login_password,
           });
-          console.log(data);
+          console.log("login", data);
           if (!data.code) return this.$message.error(data.value);
           this.$message.success(data.value);
           localStorage.setItem("token", data.token);
@@ -255,7 +201,7 @@ export default {
           let { data } = await this.$axios.post("/node/login/userLoginS", {
             user_telphone: this.ruleForm.user_telphone,
           });
-          console.log(data);
+          console.log("login", data);
           if (!data.code) return this.$message.error(data.value);
           this.$message.success(data.value);
           localStorage.setItem("token", data.token);

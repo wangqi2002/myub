@@ -2,20 +2,12 @@
   <div class="publishBook">
     <!-- 输入书本的ISBN -->
     <div class="isbn_wrap">
-      <input
-        class="isbn_input"
-        placeholder="请输入书本的ISBN号码"
-        v-model="isbn"
-      />
+      <input class="isbn_input" placeholder="请输入书本的ISBN号码" v-model="isbn" />
       <img src="@/assets/imgs/select_isbn1.png" alt="" />
       <button type="primary" class="isbn_btn" @click="handerISBN">确认</button>
     </div>
-    <transition
-      appear
-      name="animate__animated animate__bounce"
-      enter-active-class="animate__bounceInDown"
-      leave-active-class="animate__fadeOutDown"
-    >
+    <transition appear name="animate__animated animate__bounce" enter-active-class="animate__bounceInDown"
+      leave-active-class="animate__fadeOutDown">
       <div class="book_wrap" v-show="book_show">
         <!-- 书籍详情 -->
         <div class="book_item">
@@ -48,12 +40,7 @@
           <div class="classify price">
             <span>类别</span>
             <el-select v-model="value" size="mini" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-select>
           </div>
@@ -63,13 +50,7 @@
             <span class="notActuall">*非必填</span>
           </div>
           <div class="textArea">
-            <textarea
-              name=""
-              id=""
-              cols="45"
-              rows="5"
-              v-model="message"
-            ></textarea>
+            <textarea name="" id="" cols="45" rows="5" v-model="message"></textarea>
           </div>
           <!-- 发布时长 -->
           <div class="price">
@@ -81,13 +62,7 @@
             </div>
           </div>
           <!-- 发布图书 -->
-          <el-button
-            type="primary"
-            size="mini"
-            @click="commitBook"
-            class="publish_btn"
-            >发布图书</el-button
-          >
+          <el-button type="primary" size="mini" @click="commitBook" class="publish_btn">发布图书</el-button>
         </div>
       </div>
     </transition>
@@ -101,7 +76,7 @@ export default {
       book_show: false,
       isbn: "",
       price: 15,
-      message: "哈哈",
+      message: "简介：略",
       book_content: {},
       userData: {},
       options: [
@@ -162,7 +137,7 @@ export default {
           label: "其他",
         },
       ],
-      book_sescription: "该书暂时还没有简介哦！",
+      book_sescription: "该书暂时还没有简介",
       value: "通用",
       days: 30,
     };
@@ -184,9 +159,8 @@ export default {
     photoUrl: {
       get: function () {
         if (this.book_content.book_cover) {
-          // console.log(this.book_content);
           if (this.book_content.book_cover.includes("bookCover")) {
-            return "node" + this.book_content.book_cover;
+            return "/node" + this.book_content.book_cover;
           } else {
             return this.book_content.book_cover;
           }
@@ -201,7 +175,7 @@ export default {
     // ISBN查找图书信息
     async handerISBN() {
       await this.$axios.get(`/node/book/getIsbn/${this.isbn}`).then((res) => {
-        console.log(res.data);
+        console.log("publish", res.data);
         if (!res.data.code) return this.$message.error(res.data.value);
         if (!res.data.book.book_abstract) {
           this.book_content = {
@@ -216,13 +190,13 @@ export default {
     },
     // 提交设置的图书信息
     async commitBook() {
-      // console.log(this.$store.state.userInfo.user_id);
+      // console.log("publish", this.$store.state.userInfo.user_id);
       await this.$axios
         .post("/node/book", {
           ...this.book_content,
         })
         .then((res) => {
-          console.log(res);
+          console.log("publish", res);
         })
         .catch((err) => {
           console.log(err);
@@ -237,7 +211,7 @@ export default {
       this.book_show = false;
       this.$message.success("书籍发布成功");
       this.isbn = "";
-      console.log(res);
+      console.log("publish", res);
       await this.$axios
         .post("/node/sellerorder", {
           sellerorder_sellerid: this.userData.user_id,
@@ -246,7 +220,7 @@ export default {
           sellerorder_bookid: res._id
         })
         .then((res) => {
-          console.log(res);
+          console.log("publish", res);
         })
         .catch((err) => {
           console.log(err);
@@ -258,7 +232,7 @@ export default {
           r_result: 1,
         })
         .then((res) => {
-          console.log(res);
+          console.log("publish", res);
         })
         .catch((err) => {
           console.log(err);
@@ -272,7 +246,6 @@ export default {
       user_id: this.$store.state.userInfo.user_id,
     });
     this.userData = data[0];
-    console.log(this.userData);
   },
   beforeRouteEnter(from, to, next) {
     if (!localStorage.getItem("token")) {
@@ -295,6 +268,7 @@ export default {
   width: 100%;
   max-height: calc(100vh - 40px);
   overflow: hidden;
+
   // ISBN号码
   .isbn_wrap {
     max-width: 500px;
@@ -308,12 +282,14 @@ export default {
     justify-content: space-around;
     align-items: center;
     box-shadow: 0 0 6px #b0b0b0;
+
     img {
       position: absolute;
       top: 11px;
       left: 10px;
       width: 18px;
     }
+
     .isbn_input {
       width: 400px;
       height: 30px;
@@ -322,9 +298,11 @@ export default {
       padding: 0 20px;
       box-sizing: border-box;
     }
+
     /deep/ .el-button span {
       margin-top: 0px;
     }
+
     button {
       width: 70px;
       height: 40px;
@@ -336,6 +314,7 @@ export default {
       cursor: pointer;
     }
   }
+
   // 书籍详情
   .book_wrap {
     max-width: 500px;
@@ -344,6 +323,7 @@ export default {
     border-radius: 5px;
     box-shadow: 0 0 6px #b0b0b0;
     background: #eee;
+
     // 书籍详情
     .book_item {
       width: 100%;
@@ -353,8 +333,10 @@ export default {
       align-items: center;
       justify-content: space-around;
       box-sizing: border-box;
+
       .book_content {
         width: 300px;
+
         .desc {
           width: 100%;
           font-size: 12px;
@@ -367,18 +349,22 @@ export default {
           -webkit-box-orient: vertical; //元素的排列方式
           text-overflow: ellipsis; //省略号显示超出部分
         }
+
         .author {
           float: left;
           font-weight: bold;
         }
+
         .price {
           float: right;
           color: red;
         }
+
         h3 {
           margin-bottom: 10px;
         }
       }
+
       .book_img {
         width: 100px;
 
@@ -387,6 +373,7 @@ export default {
         }
       }
     }
+
     // 卖书相关
     .sold_book {
       width: 90%;
@@ -395,14 +382,17 @@ export default {
       background: #fff;
       border-radius: 5px;
       overflow: hidden;
+
       .publish_btn {
         width: 80%;
         margin: 5px auto;
         display: block;
       }
+
       .textArea {
         width: 80%;
         margin: 10px auto;
+
         textarea {
           border: none;
           outline: none;
@@ -410,8 +400,10 @@ export default {
           background: #eee;
           padding: 10px;
         }
+
         // display: block;
       }
+
       // 设置价格
       .price {
         width: 80%;
@@ -421,7 +413,9 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         .setPrice {
+
           // width: 100px;
           .btn {
             width: 30px;
@@ -431,6 +425,7 @@ export default {
             margin-left: 3px;
             font-size: 18px;
           }
+
           input {
             padding: 0 5px;
             box-sizing: border-box;
@@ -438,12 +433,14 @@ export default {
           }
         }
       }
+
       // 设置类别
       .classify {
         /deep/ .el-select--mini {
           width: 100px;
         }
       }
+
       // 备注信息
       .message {
         .notActuall {
@@ -453,6 +450,7 @@ export default {
     }
   }
 }
+
 .test {
   width: 200px;
   height: 200px;
@@ -467,6 +465,7 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .el-select-dropdown__wrap {
   max-height: 140px !important;
 }

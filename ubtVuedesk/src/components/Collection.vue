@@ -3,15 +3,10 @@
     <div class="collection_wrap">
       <div class="title">
         <h3>
-          收藏夹 <span>全部（{{ tableData.length }}）</span>
+          收藏夹 <span>全部：({{ tableData.length }})</span>
         </h3>
       </div>
-      <el-table
-        ref="multipleTable"
-        :data="tableData"
-        tooltip-effect="dark"
-        style="width: 100%"
-      >
+      <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
         <el-table-column label="书籍名称" width="120">
           <template slot-scope="scope">
             <p style="verticalalign: middle">{{ scope.row.book_name }}</p>
@@ -30,30 +25,18 @@
 
         <el-table-column label="操作" show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
-            >
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
 
         <el-table-column label="详情" show-overflow-tooltip>
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleDetail(scope.$index, scope.row)"
-              >跳转</el-button
-            >
+            <el-button size="mini" type="primary" @click="handleDetail(scope.$index, scope.row)">跳转</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="单价" width="120">
           <template slot="header">
-            <el-button size="mini" type="danger" @click="handleDeleteAll()"
-              >清空收藏夹</el-button
-            >
+            <el-button size="mini" type="danger" @click="handleDeleteAll()">清空收藏夹</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -75,7 +58,6 @@ export default {
   methods: {
     // 将书籍从收藏夹删除
     async handleDelete(index, row) {
-      // console.log(row, index);
       let _id = row.bookA_id;
       // let { data } = await this.$axios.get(
       //   "/node/user/getCollections/" + this.$store.state.userInfo.user_id
@@ -106,7 +88,6 @@ export default {
     },
 
     async handleDetail(index, row) {
-      // console.log(row, index);
       this.$router.push({ path: "/bookdetails", query: row });
     },
 
@@ -123,29 +104,25 @@ export default {
     // 获取收藏的书籍数据
     async getCollections(_id) {
       let { data } = await this.$axios.get("/node/user/getCollections/" + _id);
-      console.log(data);
+      console.log("collect", data);
       this.collectionValue = data[0].user_collection;
       if (this.collectionValue == null) {
         this.tableData = [];
       } else {
         let collectArr = this.collectionValue.split(" ");
         collectArr.pop();
-        // console.log(collectArr);
         let newData = [];
         let valueC = "";
         for (let i = 0; i < collectArr.length; i++) {
           let { data: item } = await this.$axios.get(
             "/node/bookabout/idTrue/" + collectArr[i]
           );
-          // console.log(item);
           if (item.results.length != 0) {
             item = item.results[0];
             valueC = valueC.concat(`${item.bookA_id} `);
-            item.book_cover = "http://47.113.229.104:4000" + item.book_cover;
+            item.book_cover = "/node" + item.book_cover;
             item = { ...item, bol: false };
-            // console.log(item);
             newData.push(item);
-            // console.log(newData);
           }
         }
         if (valueC == "") {
@@ -167,11 +144,13 @@ export default {
   height: calc(100vh - 40px);
   background: rgb(233, 228, 227);
   overflow: hidden;
+
   .page {
     position: absolute;
     bottom: 10px;
     right: 0;
   }
+
   .collection_wrap {
     position: relative;
     max-width: 800px;
@@ -181,6 +160,7 @@ export default {
     // border-radius: 20px;/
     padding: 60px 30px 60px;
     overflow: auto;
+
     .title {
       position: absolute;
       top: 0px;
@@ -193,18 +173,22 @@ export default {
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid #333;
+
       span {
         margin-left: 4px;
       }
+
       .title_right {
         display: flex;
         align-items: center;
         font-family: 16px;
+
         .money {
           color: red;
           margin: 0 10px;
           font-size: 20px;
         }
+
         .pay {
           width: 80px;
           height: 40px;
@@ -215,16 +199,19 @@ export default {
           font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
           cursor: pointer;
         }
+
         .active {
           background: #ff6700;
         }
       }
+
       .book_info {
         display: flex;
       }
     }
   }
 }
+
 .collection_wrap::-webkit-scrollbar {
   width: 2px;
   height: 16px;

@@ -1,10 +1,11 @@
 const conn = require("../model/connectionRequest")
+const { createRandomString } = require("../util/tool")
 const SellerorderService = {
     addOrder: ({ sellerorder_sellerid, sellerorder_book_isbn, sellerorder_address, sellerorder_bookid }, callback) => {
 
-        let sellerorder_id = new Date().getTime() + Math.random().toString(36).substring(4, 9);
+        let sellerorder_id = createRandomString(18);
         let sellerorder_date = new Date();
-        console.log(sellerorder_id, sellerorder_sellerid, sellerorder_bookid, sellerorder_book_isbn, sellerorder_date, sellerorder_address, "----");
+        console.log("sellorder---", sellerorder_id, sellerorder_sellerid, sellerorder_bookid, sellerorder_book_isbn, sellerorder_date, sellerorder_address);
 
         let sql_insert = `INSERT INTO sellerorder VALUES(?,?,?,?,?,?,default)`;
         let sql_insertParams = [sellerorder_id, sellerorder_sellerid, sellerorder_bookid, sellerorder_book_isbn, sellerorder_date, sellerorder_address];
@@ -14,9 +15,11 @@ const SellerorderService = {
                 if (err) {
                     throw err
                 }
-                // console.log(results, "444");
-                if (err) callback({ code: 0, value: "插入失败！" })
-                else callback({ code: 1, value: "插入成功" })
+                if (err) {
+                    callback({ code: 0, value: "插入失败！" })
+                } else {
+                    callback({ code: 1, value: "插入成功" })
+                }
             })
         } catch (error) {
             console.log(error);
@@ -24,7 +27,7 @@ const SellerorderService = {
     },
 
     updateOrder: ({ sellerorder_status }, sellerorder_id, callback) => {
-        console.log(sellerorder_id + "====" + sellerorder_status);
+        console.log("sellorder---", sellerorder_id, sellerorder_status);
 
         let sql_update = `UPDATE sellerorder set sellerorder_status=? where sellerorder_id=?`;
         let sql_updateParams = [sellerorder_status, sellerorder_id];
@@ -35,16 +38,18 @@ const SellerorderService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该订单不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该订单不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -54,7 +59,7 @@ const SellerorderService = {
     },
 
     deleteOrder: (sellerorder_id, callback) => {
-        console.log(sellerorder_id);
+        console.log("sellorder---", sellerorder_id);
 
         let sql_delete = `delete from sellerorder where sellerorder_id=?`;
         let sql_look_id = `SELECT * FROM sellerorder WHERE sellerorder_id= ?`;
@@ -64,17 +69,19 @@ const SellerorderService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该订单不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该订单不存在！" })
+                } else {
                     if (result1[0].sellerorder_status === 1) {
                         conn.query(sql_delete, sellerorder_id, (err, results) => {
                             if (err) {
                                 throw err
                             }
-                            // console.log(results, "444");
-                            if (err) callback({ code: 0, value: "删除失败！" })
-                            else callback({ code: 1, value: "删除成功" })
+                            if (err) {
+                                callback({ code: 0, value: "删除失败！" })
+                            } else {
+                                callback({ code: 1, value: "删除成功" })
+                            }
                         })
                     } else {
                         callback({ code: 0, value: "该订单未完成！" })
@@ -87,7 +94,7 @@ const SellerorderService = {
     },
 
     getOrder_id: (sellerorder_sellerid, callback) => {
-        console.log(sellerorder_sellerid);
+        console.log("sellorder---", sellerorder_sellerid);
         let sql_find = `select * from sellerorder where sellerorder_sellerid=?`;
 
         try {
@@ -107,7 +114,7 @@ const SellerorderService = {
     },
 
     getOrder_status: ({ sellerorder_status }, callback) => {
-        // console.log(sellerorder_status);
+        console.log("sellorder---", sellerorder_status);
         let sql_find = `select * from sellerorder where sellerorder_status=?`;
 
         try {
@@ -127,7 +134,6 @@ const SellerorderService = {
     },
 
     getOrder_status_page: ({ page, orderSn, consignee, status }, callback) => {
-        // console.log(typeof status)
         let sql_find_total =
             `select COUNT(*) AS count from (select * from sellerorder where FIND_IN_SET (sellerorder_status,?)) as a`;
 
@@ -154,7 +160,6 @@ const SellerorderService = {
             `SELECT * FROM (SELECT * FROM (${sql_find}) a LEFT JOIN (select user_id,user_nickname,user_telphone,user_image from user where user_id in (${sql_find_user})) b on a.sellerorder_sellerid=b.user_id) m LEFT JOIN (SELECT * FROM (select * from bookabout WHERE bookA_id in (${sql_find_book})) a JOIN books b ON a.bookA_isbn=b.book_isbn) n ON m.sellerorder_bookid=n.bookA_id`
         sql_find_all = sql_find_all + ' LIMIT 6 OFFSET ?'
 
-        // console.log(sql_find_all)
         let offsets = (parseInt(page) - 1) * 6
         let sql_totalParams = [status];
         let sql_findParams = [status, status, status, offsets];
@@ -165,7 +170,6 @@ const SellerorderService = {
                 if (err) {
                     throw err
                 }
-                console.log(results1)
                 result.count = results1[0].count
                 if (results1[0].count > 0) {
                     conn.query(sql_find_all, sql_findParams, function (err, results2) {
@@ -173,8 +177,6 @@ const SellerorderService = {
                             throw err
                         }
                         result.orderData = results2
-                        // console.log(result)
-                        //将查询出来的数据返回给回调函数
                         callback &&
                             callback(
                                 result ? JSON.parse(JSON.stringify(result)) : null

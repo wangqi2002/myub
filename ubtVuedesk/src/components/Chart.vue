@@ -3,11 +3,7 @@
     <div class="header_wrap">
       <!-- 聊天页面头部 -->
       <div class="header">
-        <img
-          src="@/assets/imgs/leftArrow.png"
-          @click="$router.push({ path: '/' })"
-          alt=""
-        />
+        <img src="@/assets/imgs/leftArrow.png" @click="$router.push({ path: '/' })" alt="" />
         <p>客服热线:19566677788</p>
         <p>服务时间:6:00-22:00</p>
       </div>
@@ -18,10 +14,7 @@
         <li v-for="(item, index) of message_list" :key="index">
           <div :class="item.msg_send == 0 ? className[0] : className[1]">
             <div class="avatar"><img :src="item.imgUrl" alt="" /></div>
-            <div
-              :class="item.msg_send === 0 ? className1[0] : className1[1]"
-              ref="message_content"
-            ></div>
+            <div :class="item.msg_send === 0 ? className1[0] : className1[1]" ref="message_content"></div>
             <div :class="item.bol ? clsName2[0] : clsName2[1]">
               {{ handerDate(item.msg_time) }}
             </div>
@@ -32,14 +25,8 @@
     <!-- 发送信息框 -->
     <div class="message">
       <div class="message_wrap">
-        <el-upload
-          class="upload-demo"
-          action="/node/chart/uploadChartImg"
-          :on-success="handleAvatarSuccess"
-          :show-file-list="false"
-          multiple
-          :limit="3"
-        >
+        <el-upload class="upload-demo" action="/node/chart/uploadChartImg" :on-success="handleAvatarSuccess"
+          :show-file-list="false" multiple :limit="3">
           <i class="el-icon-circle-plus-outline upload_img"></i>
         </el-upload>
         <span class="img_test"></span>
@@ -112,11 +99,10 @@ export default {
       let bolValue = false;
       if (
         this.message_list.length !== 0 &&
-        new Date().getTime() - new Date(this.message_list[this.message_list.length - 1].msg_time).getTime() + 1000*60*60*8> 1000 * 60
-      )
-       {
+        new Date().getTime() - new Date(this.message_list[this.message_list.length - 1].msg_time).getTime() + 1000 * 60 * 60 * 8 > 1000 * 60
+      ) {
         bolValue = true;
-       }
+      }
       // 向服务端发送数据
       this.$socket.emit("chart", {
         // 接收方
@@ -129,10 +115,10 @@ export default {
             "http://47.113.229.104:4000"
           ),
           bol: bolValue,
-          msg_time:this.$moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+          msg_time: this.$moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           // 发送方
           send_id: this.userId,
-          send_name:this.$store.state.userInfo.user_nickname
+          send_name: this.$store.state.userInfo.user_nickname
         },
       });
       // 将新增的消息push到消息列表
@@ -142,7 +128,7 @@ export default {
         message: `${content}`,
         bol: bolValue,
         msg_time: this.$moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-        msg_time_now:Date.now(),
+        msg_time_now: Date.now(),
       });
       // 在本轮dom渲染结束后渲染消息内容
       this.$nextTick(() => {
@@ -173,8 +159,7 @@ export default {
     // 文件上传的限制
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
-          files.length + fileList.length
+        `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length
         } 个文件`
       );
     },
@@ -182,7 +167,7 @@ export default {
     handerDate(time) {
       let spe = /-|T|:|\s+/;
       let prevTime = time.split(spe);
-      let hours = prevTime[3] > 9 ? parseInt(prevTime[3])  : parseInt(prevTime[3][1]);
+      let hours = prevTime[3] > 9 ? parseInt(prevTime[3]) : parseInt(prevTime[3][1]);
       let result = hours + ":" + prevTime[4];
 
       if (parseInt(prevTime[0]) !== new Date().getFullYear()) {
@@ -222,7 +207,7 @@ export default {
           if (index === 0) item = { ...item, bol: true };
           else if (
             new Date(data.data[index].msg_time).getTime() -
-              new Date(data.data[index - 1].msg_time).getTime() >
+            new Date(data.data[index - 1].msg_time).getTime() >
             1000 * 60
           )
             item = { ...item, bol: true };
@@ -465,7 +450,7 @@ export default {
       padding: 0 10px;
       box-sizing: border-box;
       margin-left: 20px;
-      background: url("../assets/imgs/girl.webp") no-repeat 10% center;
+      background: url("../assets/imgs/person.png") no-repeat 10% center;
       background-size: 30px;
     }
 

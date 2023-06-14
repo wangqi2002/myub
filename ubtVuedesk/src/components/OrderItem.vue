@@ -6,8 +6,7 @@
     </div>
     <div class="center">
       <div class="center_left">
-        <!-- <img :src="'/node' + booksDetail.book_cover" alt="" /> -->
-        <img :src="'https://serve.sirbook.top' + booksDetail.book_cover" alt="" />
+        <img :src="'/node' + booksDetail.book_cover" alt="" />
         <div class="book_info">
           <p>书名：{{ booksDetail.book_name }}</p>
           <p>作者：{{ booksDetail.book_author }}</p>
@@ -59,17 +58,14 @@ export default {
       // console.log(isbn);
       let { data } = await this.$axios.get(`/node/book/getIsbn/${isbn}`);
       this.booksDetail = data.book;
-      // console.log(this.booksDetail, "2");
     },
   },
   async mounted() {
     this.orderDetail = this.message;
-    // console.log(this.orderDetail);
 
     await this.$axios
       .get(`/node/bookabout/id/${this.message.buyerorder_bookid}`)
       .then(async (res) => {
-        // console.log(res.data.results, "1");
         this.bookADetail = res.data.results[0];
         await this.getbookDetial(res.data.results[0].bookA_isbn);
       })
@@ -89,6 +85,7 @@ export default {
   flex-direction: column;
   border: 1px solid #333;
   box-shadow: 0 0 10px #b0b0b0;
+
   .header {
     padding: 0 20px;
     box-sizing: border-box;
@@ -98,6 +95,7 @@ export default {
     justify-content: space-between;
     border-bottom: 1px solid #333;
   }
+
   .center {
     padding: 0 20px;
     box-sizing: border-box;
@@ -105,22 +103,27 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .center_left {
       display: flex;
+
       img {
         width: 70px;
         height: 70px;
       }
+
       .book_info {
         margin-left: 10px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+
         p {
           font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
         }
       }
     }
+
     .book_state {
       font-weight: bold;
     }

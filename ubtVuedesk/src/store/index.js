@@ -5,44 +5,42 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    bol:true,
-    homeBol:true,
-    userInfo:{
-      user_id: "",
-      user_nickname: "",
-      user_image: "",
-      user_telphone: "",
-      user_loacation: "",
-      user_name: "",
+    bol: true,
+    homeBol: true,
+    userInfo: {
+      user_id: null,
+      user_nickname: null,
+      user_image: null,
+      user_telphone: null,
+      user_loacation: null,
+      user_name: null,
     }
   },
   mutations: {
-    CHANGEBOL(state,val){
+    CHANGEBOL(state, val) {
       state.bol = val
     },
-    CHANGEUSERINFO(state,val){
-      // console.log(val)
+    CHANGEUSERINFO(state, val) {
       state.userInfo.user_id = val.user_id
       state.userInfo.user_nickname = val.user_nickname
       state.userInfo.user_image = val.user_image
       state.userInfo.user_telphone = val.user_telphone
       state.userInfo.user_loacation = val.user_loacation
       state.userInfo.user_name = val.user_name
-      console.log(state.userInfo)
     },
-    CHANGEHOMEBOL(state,val){
+    CHANGEHOMEBOL(state, val) {
       state.homeBol = val
     },
   },
   actions: {
-    changebol(context,val){
-      context.commit("CHANGEBOL",val)
+    changebol(context, val) {
+      context.commit("CHANGEBOL", val)
     },
-    changeuserinfo(context,val){
-      context.commit("CHANGEUSERINFO",val)
+    changeuserinfo(context, val) {
+      context.commit("CHANGEUSERINFO", val)
     },
-    changehomebol(context,val){
-      context.commit("CHANGEHOMEBOL",val)
+    changehomebol(context, val) {
+      context.commit("CHANGEHOMEBOL", val)
     }
   },
   modules: {

@@ -1,19 +1,16 @@
 <template>
   <div class="books_detail">
     <div class="detail_head">
-      <!-- <img :src="'/node' + book_detail.bookA_image" alt="" /> -->
-      <!-- <img :src="'http://47.113.229.104:4000' + book_detail.bookA_image" alt="" /> -->
-      <img :src="'https://serve.sirbook.top' + book_detail.bookA_image" alt="" />
+      <img :src="'/node' + book_detail.bookA_image" alt="" />
       <div class="detail_buy">
         <div class="book_name">
           <p class="book_name_name">{{ book_detail.book_name }}</p>
           <p class="price">￥{{ book_detail.bookA_price }}</p>
         </div>
         <p class="author">{{ book_detail.book_author }}</p>
-        <!-- <p>书籍状态:{{}}</p> -->
         <div class="buyCar">
-          <button class="join_btn" @click="handerPlOrder()">购买</button>
-          <div class="love" @click="handerCollection">
+          <button class="join_btn" @click="handlePlOrder()">购买</button>
+          <div class="love" @click="handleCollection">
             <img v-if="!collection" src="@/assets/imgs/love_light.png" alt="" />
             <img v-else src="@/assets/imgs/love_dark.png" alt="" />
           </div>
@@ -23,32 +20,25 @@
     <div class="books_desc_wrap">
       <ul class="books_desc_list">
         <li>
-          <span class="jia">+</span><span>ISBN编号</span
-          ><span>{{ book_detail.book_isbn }}</span>
+          <span class="jia">+</span><span>ISBN编号</span><span>{{ book_detail.book_isbn }}</span>
         </li>
         <li>
-          <span class="jia">+</span><span>出版社</span
-          ><span>{{ book_detail.book_press }}</span>
+          <span class="jia">+</span><span>出版社</span><span>{{ book_detail.book_press }}</span>
         </li>
         <li>
-          <span class="jia">+</span><span>出版时间</span
-          ><span>{{ book_detail.book_publication_time }}</span>
+          <span class="jia">+</span><span>出版时间</span><span>{{ book_detail.book_publication_time }}</span>
         </li>
         <li>
-          <span>+</span><span>装帧方式</span
-          ><span>{{ book_detail.book_framing }}</span>
+          <span>+</span><span>装帧方式</span><span>{{ book_detail.book_framing }}</span>
         </li>
         <li>
-          <span>+</span><span>分类</span
-          ><span>{{ book_detail.bookA_kind }}</span>
+          <span>+</span><span>分类</span><span>{{ book_detail.bookA_kind }}</span>
         </li>
         <li>
-          <span>+</span><span>定价</span
-          ><span>{{ book_detail.book_publiction_price }}</span>
+          <span>+</span><span>定价</span><span>{{ book_detail.book_publiction_price }}</span>
         </li>
         <li>
-          <span>+</span><span>图书介绍</span
-          ><span class="book_long_desc">{{ book_detail.book_abstract }}</span>
+          <span>+</span><span>图书介绍</span><span class="book_long_desc">{{ book_detail.book_abstract }}</span>
         </li>
       </ul>
     </div>
@@ -68,9 +58,10 @@ export default {
   },
   methods: {
     // 路由跳转
-    handerPlOrder() {
-      if (!localStorage.getItem("token"))
+    handlePlOrder() {
+      if (!localStorage.getItem("token")) {
         return this.$message.error("请登录...");
+      }
       this.$router.push({
         path: "/Order",
         query: {
@@ -78,9 +69,11 @@ export default {
         },
       });
     },
-
     // 收藏/取消收藏
-    async handerCollection() {
+    async handleCollection() {
+      if (!localStorage.getItem("token")) {
+        return this.$message.error("请登录...");
+      }
       if (!this.collection) {
         if (this.collectionValue == null) {
           this.collectionValue = `${this.book_detail.bookA_id} `;
@@ -107,8 +100,7 @@ export default {
       }
       this.collection = !this.collection;
 
-      console.log(this.collectionValue);
-      // console.log(this.book_detail);
+      // console.log("bookdetail.vue" + this.collectionValue);
       let { data } = await this.$axios.post("/node/user/collect", {
         user_collection: this.collectionValue,
         user_id: this.$store.state.userInfo.user_id,
@@ -116,32 +108,41 @@ export default {
       this.$router.push({
         query: merge(this.$route.query, { bookA_collection: this.collection }),
       });
-      if (data.code && this.collection) this.$message.success("收藏成功");
-      if (!data.code) this.$message.error("操作失败");
+      if (data.code && this.collection) {
+        this.$message.success("收藏成功");
+      }
+      if (!data.code) {
+        this.$message.error("操作失败");
+      }
     },
+    async handleGetCollect() {
+      if (!localStorage.getItem("token")) {
+        return
+      }
+      let { data: res } = await this.$axios.get(
+        `/node/user/getCollections/${this.$store.state.userInfo.user_id}`
+      );
+      this.collectionValue = res[0].user_collection;
+      if (this.collectionValue == null) {
+        this.collection = false;
+      } else {
+        let collectArr = this.collectionValue.split(" ");
+        if (collectArr.length > 1) {
+          collectArr.pop();
+        }
+        // console.log("bookdetail.vue" + collectArr);
+        for (let i = 0; i < collectArr.length; i++) {
+          if (collectArr[i] === this.book_detail.bookA_id) {
+            this.collection = true;
+          }
+        }
+      }
+    }
   },
   async mounted() {
     this.$store.dispatch("changehomebol", false);
     this.book_detail = this.$route.query;
-    console.log(this.$route.query); // 获得用户收藏字段
-    let { data: res } = await this.$axios.get(
-      `/node/user/getCollections/${this.$store.state.userInfo.user_id}`
-    );
-    this.collectionValue = res[0].user_collection;
-    if (this.collectionValue == null) {
-      this.collection = false;
-    } else {
-      let collectArr = this.collectionValue.split(" ");
-      if (collectArr.length > 1) {
-        collectArr.pop();
-      }
-      console.log(collectArr);
-      for (let i = 0; i < collectArr.length; i++) {
-        if (collectArr[i] === this.book_detail.bookA_id) {
-          this.collection = true;
-        }
-      }
-    }
+    this.handleGetCollect()
   },
   beforeRouteLeave(from, to, next) {
     this.$store.dispatch("changehomebol", true);
@@ -158,23 +159,29 @@ export default {
   box-sizing: border-box;
   // border: 1px solid #333;
   max-height: calc(100vh - 40px);
+
   .detail_head {
     width: 100%;
     display: flex;
     justify-content: space-between;
+
     img {
       width: 160px;
     }
+
     .detail_buy {
       width: 300px;
+
       .book_name {
         width: 100%;
         display: flex;
         justify-content: space-between;
+
         .price {
           font-weight: bold;
           font-size: 20px;
         }
+
         .book_name_name {
           width: 140px;
           font-size: 12px;
@@ -187,14 +194,17 @@ export default {
           text-overflow: ellipsis; //省略号显示超出部分
         }
       }
+
       .author {
         font-size: 10px;
         color: #b0b0b0;
         margin-top: 20px;
       }
+
       .buyCar {
         display: flex;
         margin-top: 35px;
+
         .join_btn {
           width: 150px;
           height: 40px;
@@ -203,6 +213,7 @@ export default {
           color: #fff;
           cursor: pointer;
         }
+
         .love {
           position: relative;
           width: 40px;
@@ -214,6 +225,7 @@ export default {
           justify-content: center;
           align-items: center;
           cursor: pointer;
+
           img {
             width: 50%;
           }
@@ -221,10 +233,13 @@ export default {
       }
     }
   }
+
   .books_desc_wrap {
     width: 100%;
+
     .books_desc_list {
       width: 100%;
+
       li {
         .book_long_desc {
           -webkit-line-clamp: 4; //显示2行
@@ -235,13 +250,16 @@ export default {
           text-overflow: ellipsis; //省略号显示超出部分
           margin-top: 5px;
         }
+
         span {
           margin-top: 17px;
         }
+
         span:nth-child(1) {
           margin-right: 10px;
           font-weight: bold;
         }
+
         span:nth-child(2) {
           display: inline-block;
           width: 100px;

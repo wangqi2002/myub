@@ -14,29 +14,17 @@
         <p class="address_item">
           {{
             $store.state.userInfo.user_loacation
-              ? $store.state.userInfo.user_loacation
-              : address
+            ? $store.state.userInfo.user_loacation
+            : address
           }}
         </p>
       </div>
     </div>
     <!-- 修改信息 -->
     <div class="classify_item">
-      <el-form
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        ref="ruleForm"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
+      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="昵称:" prop="name">
-          <el-input
-            type="text"
-            v-model="ruleForm.name"
-            autocomplete="off"
-            :disabled="inputBol"
-          ></el-input>
+          <el-input type="text" v-model="ruleForm.name" autocomplete="off" :disabled="inputBol"></el-input>
         </el-form-item>
         <!-- <el-form-item label="QQ号:" prop="qq">
           <el-input
@@ -47,33 +35,18 @@
           ></el-input>
         </el-form-item> -->
         <el-form-item label="收货地址:" prop="address">
-          <el-input
-            type="text"
-            v-model="ruleForm.address"
-            autocomplete="off"
-            :disabled="inputBol"
-          ></el-input>
+          <el-input type="text" v-model="ruleForm.address" autocomplete="off" :disabled="inputBol"></el-input>
         </el-form-item>
         <el-form-item label="头像:" prop="pass">
-          <el-upload
-            class="avatar-uploader"
-            action="/node/user/avater"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-            :disabled="inputBol"
-          >
+          <el-upload class="avatar-uploader" action="/node/user/avater" :show-file-list="false"
+            :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :disabled="inputBol">
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="inputBol = !inputBol"
-            >编辑资料</el-button
-          >
-          <el-button type="primary" @click="submitForm('ruleForm')"
-            >确认修改</el-button
-          >
+          <el-button type="primary" @click="inputBol = !inputBol">编辑资料</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">确认修改</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -193,7 +166,7 @@ export default {
           this.inputBol = true;
           let userData = this.$store.state.userInfo;
           userData.user_image = this.imageUrl;
-          this.$store.dispatch("changeuserinfo",userData)
+          this.$store.dispatch("changeuserinfo", userData)
           this.nowImg = this.imageUrl;
         } else {
           console.log("error submit!!");
@@ -224,6 +197,7 @@ export default {
   max-height: calc(100vh - 90px);
   padding: 40px 0;
   box-sizing: border-box;
+
   .header {
     max-width: 700px;
     height: 120px;
@@ -234,12 +208,14 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .account_info {
       width: 180px;
       height: 18px;
       display: flex;
       justify-content: space-around;
       align-items: center;
+
       .avatar {
         width: 80px;
         height: 80px;
@@ -247,17 +223,21 @@ export default {
         background: var(--avatar) no-repeat center/cover;
         border: 1px solid black;
       }
+
       .info {
         display: flex;
         flex-direction: column;
         justify-content: center;
+
         .name {
           color: red;
         }
       }
     }
+
     .address {
       width: 150px;
+
       .address_item {
         font-size: 13px;
         color: red;
@@ -271,18 +251,22 @@ export default {
   max-width: 700px;
   margin: 0 auto;
   overflow: hidden;
+
   .avatar {
     width: 100px;
   }
+
   /deep/ .el-input {
     max-width: 80% !important;
   }
+
   // /deep/ .el-input__inner{
   //   border: none;
   // }
   /deep/ .el-input__suffix {
     display: none;
   }
+
   .register_item {
     position: relative;
     background: #fff;
@@ -292,6 +276,7 @@ export default {
     box-sizing: border-box;
     margin: 100px auto;
     box-shadow: 0px 0px 10px #b0b0b0;
+
     .tip {
       position: absolute;
       bottom: 21%;

@@ -16,9 +16,6 @@ Vue.use(new VueSocketIO({
   /* connection: ClientSocketIO.connect('http://localhost:4000/', {
     transports: ['websocket']
   }) */
-  /* connection: ClientSocketIO.connect('http://47.113.229.104:4000/', {
-    transports: ['websocket']
-  }) */
   connection: ClientSocketIO.connect('https://serve.sirbook.top/', {
     transports: ['websocket']
   })

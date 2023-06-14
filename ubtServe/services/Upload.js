@@ -6,7 +6,6 @@ const path = require("path")
 const storage_userImg = multer.diskStorage({
     //存储位置
     destination: function (req, file, cb) {
-        console.log(file);
         let filePath = path.resolve(__dirname, "../public/images/userImg");
         cb(null, filePath)
     },
@@ -21,7 +20,6 @@ const storage_userImg = multer.diskStorage({
 const storage_detailsImg = multer.diskStorage({
     //存储位置
     destination: function (req, file, cb) {
-        console.log(file);
         let filePath = path.resolve(__dirname, "../public/images/detailsImg");
         cb(null, filePath)
     },

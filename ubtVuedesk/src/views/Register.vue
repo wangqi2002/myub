@@ -2,42 +2,20 @@
   <div class="register">
     <div class="register_item">
       <h2>注册</h2>
-      <el-form
-        :model="ruleForm"
-        status-icon
-        :rules="rules"
-        ref="ruleForm"
-        label-width="100px"
-        class="demo-ruleForm"
-      >
+      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="手机号码" prop="tele">
-          <el-input
-            type="text"
-            v-model="ruleForm.tele"
-            autocomplete="off"
-          ></el-input>
+          <el-input type="text" v-model="ruleForm.tele" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pass">
-          <el-input
-            type="password"
-            v-model="ruleForm.pass"
-            autocomplete="off"
-          ></el-input>
+          <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="验证码" prop="svg" class="svg">
-          <el-input
-            type="text"
-            v-model="ruleForm.svg"
-            autocomplete="off"
-            class="svg_item"
-          ></el-input>
+          <el-input type="text" v-model="ruleForm.svg" autocomplete="off" class="svg_item"></el-input>
           <div class="getSvg" @click="handerSvg">获取验证码</div>
         </el-form-item>
         <p class="tip" @click="handerLogin">已有账号?立即登录</p>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')"
-            >注册</el-button
-          >
+          <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -104,15 +82,11 @@ export default {
             user_login_account: this.ruleForm.account,
             user_login_password: this.ruleForm.pass,
             user_telphone: this.ruleForm.tele,
-          }); // 清空表格数据
-          /* .then((res) => {
-              console.log(res);
-              console.log("成功");
-            })
-            .catch((err) => {
-              console.log(err);
-            }) */ this.$refs[formName].resetFields();
-          if (!data.code) return this.$message.error(data.value);
+          });
+          this.$refs[formName].resetFields();
+          if (!data.code) {
+            return this.$message.error(data.value);
+          }
           this.$message.success(data.value);
           setTimeout(function () {
             that.$router.push({ name: "login" });
@@ -125,7 +99,9 @@ export default {
     },
     //获取短信验证码
     async handerSvg() {
-      if (!this.ruleForm.tele) return this.$message.error("请输入手机号");
+      if (!this.ruleForm.tele) {
+        return this.$message.error("请输入手机号");
+      }
       let { data } = await this.$axios.post("/node/user/getSvg", {
         user_telphone: this.ruleForm.tele,
       });
@@ -150,6 +126,7 @@ export default {
   height: 100vh;
   overflow: hidden;
   background: url("../assets/imgs/book_register.jpg") no-repeat center/cover;
+
   .register_item {
     position: relative;
     background: #fff;
@@ -159,6 +136,7 @@ export default {
     box-sizing: border-box;
     margin: 100px auto;
     box-shadow: 0px 0px 10px #b0b0b0;
+
     .tip {
       position: absolute;
       bottom: 21%;
@@ -182,6 +160,7 @@ export default {
       display: flex;
       width: 60%;
     }
+
     /deep/ .el-input__suffix {
       display: none;
     }
@@ -196,6 +175,7 @@ export default {
         text-align: center;
         cursor: pointer;
       }
+
       .svg_item {
         width: 50% !important;
       }

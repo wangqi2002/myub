@@ -17,25 +17,25 @@ const axios1 = axios.create({
   baseURL: '',
   // 请求超时的时间
   timeout: 5000
-}); 
+});
 
 
 //添加请求拦截器，会在发起请求之前执行相应的需求,使用token验证时必须加上这玩意
 axios1.interceptors.request.use(function (config) {
-  if(localStorage.getItem("token")){
+  if (localStorage.getItem("token")) {
     config.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem("token");
-  }
-    
-    // else config.headers.common['Authorization'] = 'Bearer '
-    return config;
-  }, function (error) {
-    return Promise.reject(error);
-  });
+  } /* else {
+    config.headers.common['Authorization'] = 'Bearer '
+  } */
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
 
 // //添加响应拦截器，会在返回数据后先执行相应的需求
 axios1.interceptors.response.use(function (response) {
-    return response;
-  }, function (error) {
-    return Promise.reject(error);
-  });
+  return response;
+}, function (error) {
+  return Promise.reject(error);
+});
 export default axios1

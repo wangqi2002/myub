@@ -1,9 +1,10 @@
 const conn = require("../model/connectionRequest")
+const { createRandomString } = require("../util/tool")
 const BookAboutService = {
     addBook: (bookA_isbn, bookA_old_degree, bookA_price, bookA_image, bookA_stand, bookA_kind, callback) => {
-        console.log("---", bookA_isbn, bookA_old_degree, bookA_price, bookA_image, bookA_stand, bookA_kind, "----");
+        console.log("bookabout---", bookA_isbn, bookA_old_degree, bookA_price, bookA_image, bookA_stand, bookA_kind);
 
-        let bookA_id = new Date().getTime() + Math.random().toString(36).substring(4, 9);
+        let bookA_id = createRandomString(18);
         let bookA_date = new Date();
         let sql_insert = `INSERT INTO bookabout VALUES(?,?,?,?,?,?,?,default,?)`;
         let sql_insertParams = [bookA_id, bookA_isbn, bookA_old_degree, bookA_price, bookA_image, bookA_stand, bookA_kind, bookA_date];
@@ -13,9 +14,11 @@ const BookAboutService = {
                 if (err) {
                     throw err
                 }
-                console.log(results, 444);
-                if (err) callback({ code: 0, value: "插入失败！" })
-                else callback({ code: 1, value: "插入成功", _id: bookA_id })
+                if (err) {
+                    callback({ code: 0, value: "插入失败！" })
+                } else {
+                    callback({ code: 1, value: "插入成功", _id: bookA_id })
+                }
             })
         } catch (error) {
             console.log(error);
@@ -23,7 +26,7 @@ const BookAboutService = {
     },
 
     updateBook_kind: ({ bookA_kind }, bookA_id, callback) => {
-        console.log(bookA_id + "====" + bookA_kind);
+        console.log("bookabout---", bookA_id, bookA_kind);
 
         let sql_update = `UPDATE bookabout set bookA_kind=? where bookA_id=?`;
         let sql_updateParams = [bookA_kind, bookA_id];
@@ -34,16 +37,18 @@ const BookAboutService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该书籍不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该书籍不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -53,7 +58,7 @@ const BookAboutService = {
     },
 
     updateBook_state: ({ bookA_state }, bookA_id, callback) => {
-        console.log(bookA_id + "====" + bookA_state);
+        console.log("bookabout---", bookA_id, bookA_state);
 
         let sql_update = `UPDATE bookabout set bookA_state=? where bookA_id=?`;
         let sql_updateParams = [bookA_state, bookA_id];
@@ -64,16 +69,18 @@ const BookAboutService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该书籍不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该书籍不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -83,7 +90,7 @@ const BookAboutService = {
     },
 
     updateBook_price: ({ bookA_price }, bookA_id, callback) => {
-        console.log(bookA_id + "====" + bookA_price);
+        console.log("bookabout---", bookA_id, bookA_price);
 
         let sql_update = `UPDATE bookabout set bookA_price=? where bookA_id=?`;
         let sql_updateParams = [bookA_price, bookA_id];
@@ -94,16 +101,18 @@ const BookAboutService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该书籍不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该书籍不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -113,7 +122,7 @@ const BookAboutService = {
     },
 
     deleteBook: (bookA_id, callback) => {
-        console.log(bookA_id);
+        console.log("bookabout---", bookA_id);
 
         let sql_delete = `delete from bookabout where bookA_id=?`;
 
@@ -122,9 +131,11 @@ const BookAboutService = {
                 if (err) {
                     throw err
                 }
-                console.log(results, "444");
-                if (err) callback({ code: 0, value: "删除失败！" })
-                else callback({ code: 1, value: "删除成功" })
+                if (err) {
+                    callback({ code: 0, value: "删除失败！" })
+                } else {
+                    callback({ code: 1, value: "删除成功" })
+                }
             })
         } catch (error) {
             console.log(error);
@@ -139,8 +150,6 @@ const BookAboutService = {
                 if (err) {
                     throw err
                 }
-                // console.log(results);
-                //将查询出来的数据返回给回调函数
                 callback &&
                     callback(
                         results ? JSON.parse(JSON.stringify(results)) : null
@@ -163,7 +172,6 @@ const BookAboutService = {
                 if (err) {
                     throw err
                 }
-                // console.log(results1)
                 result.count = results1[0].count
                 if (results1[0].count > 0) {
                     conn.query(sql_find, sql_findParams, function (err, results2) {
@@ -171,8 +179,6 @@ const BookAboutService = {
                             throw err
                         }
                         result.bookData = results2
-                        // console.log(result)
-                        //将查询出来的数据返回给回调函数
                         callback &&
                             callback(
                                 result ? JSON.parse(JSON.stringify(result)) : null
@@ -180,9 +186,9 @@ const BookAboutService = {
                     })
                 } else {
                     callback &&
-                    callback(
-                        result ? JSON.parse(JSON.stringify(result)) : null
-                    )
+                        callback(
+                            result ? JSON.parse(JSON.stringify(result)) : null
+                        )
                 }
             })
         } catch (error) {
@@ -210,7 +216,7 @@ const BookAboutService = {
     },
 
     getLinkbook: ({ onset, offset, classify }, callback) => {
-        console.log(onset, "----", offset, "----", classify)
+        console.log("bookabout---", onset, offset, classify)
         let sql_find;
         let sql_count;
         if (classify !== '全部') {
@@ -227,10 +233,7 @@ const BookAboutService = {
                 throw err
             }
             else {
-                // console.log(results);
                 conn.query(sql_count, (err1, result1) => {
-                    //将查询出来的数据返回给回调函数
-                    // console.log(result1);
                     let totalResult = {
                         books: results,
                         count: result1[0].classify
@@ -345,7 +348,7 @@ const BookAboutService = {
         let sql_find_total = `select COUNT(*) AS count from (select * from bookabout where bookA_isbn=?) as a`;
         let sql_find = `select * from (select * from bookabout where bookA_isbn=?) a LEFT OUTER JOIN books s  ON a.bookA_isbn=s.book_isbn`;
         let sql_findParams = [bookA_isbn];
-        let result = { count: null, bookData: null};
+        let result = { count: null, bookData: null };
 
         try {
             conn.query(sql_find_total, sql_findParams, function (err, results1, fields) {
@@ -359,7 +362,6 @@ const BookAboutService = {
                             throw err
                         }
                         result.bookData = results2
-                        // console.log(result)
                         //将查询出来的数据返回给回调函数
                         callback &&
                             callback(
@@ -368,9 +370,9 @@ const BookAboutService = {
                     })
                 } else {
                     callback &&
-                    callback(
-                        result ? JSON.parse(JSON.stringify(result)) : null
-                    )
+                        callback(
+                            result ? JSON.parse(JSON.stringify(result)) : null
+                        )
                 }
             })
         } catch (error) {
@@ -416,7 +418,7 @@ const BookAboutService = {
         }
     },
 
-    getBook_state: ({state, page }, callback) => {
+    getBook_state: ({ state, page }, callback) => {
         let sql_find_total = `select COUNT(*) AS count from (select * from bookabout where bookA_state=?) as a`;
         let sql_find = `select * from (select * from bookabout where bookA_state=? LIMIT 6 OFFSET ?) a LEFT OUTER JOIN books s ON a.bookA_isbn=s.book_isbn`
         let offsets = (parseInt(page) - 1) * 6
@@ -435,7 +437,6 @@ const BookAboutService = {
                             throw err
                         }
                         result.bookData = results2
-                        // console.log(result)
                         //将查询出来的数据返回给回调函数
                         callback &&
                             callback(
@@ -444,9 +445,9 @@ const BookAboutService = {
                     })
                 } else {
                     callback &&
-                    callback(
-                        result ? JSON.parse(JSON.stringify(result)) : null
-                    )
+                        callback(
+                            result ? JSON.parse(JSON.stringify(result)) : null
+                        )
                 }
             })
         } catch (error) {
@@ -455,10 +456,7 @@ const BookAboutService = {
     },
 
     changeBookAimage: (bookA_id, bookA_image, callback) => {
-
-        console.log('到达了service');
-
-        console.log(bookA_id, bookA_image);
+        console.log("bookabout---", bookA_id, bookA_image);
 
         let sql_update = `UPDATE bookabout set bookA_image=? where bookA_id=?`;
         let sql_updateParams = [bookA_image, bookA_id];
@@ -467,24 +465,27 @@ const BookAboutService = {
             if (err1) {
                 throw err1
             }
-            if (!result1.length) callback({
-                code: 0,
-                value: "该书不存在！"
-            })
-            else {
+            if (!result1.length) {
+                callback({
+                    code: 0,
+                    value: "该书不存在！"
+                })
+            } else {
                 conn.query(sql_update, sql_updateParams, (err2, results2) => {
                     if (err2) {
                         throw err2
                     }
-                    console.log(results2, "444");
-                    if (err2) callback({
-                        code: 0,
-                        value: "更新失败！"
-                    })
-                    else callback({
-                        code: 1,
-                        value: "更新成功"
-                    })
+                    if (err2) {
+                        callback({
+                            code: 0,
+                            value: "更新失败！"
+                        })
+                    } else {
+                        callback({
+                            code: 1,
+                            value: "更新成功"
+                        })
+                    }
                 })
             }
         })

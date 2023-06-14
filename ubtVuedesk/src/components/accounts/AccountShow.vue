@@ -19,7 +19,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 export default {
   data() {
     return {
@@ -27,30 +27,29 @@ export default {
       userData: {},
     };
   },
+  computed: {
+    styleVar() {
+      return {
+        "--avatar": `url(/node${this.$store.state.userInfo.user_image})`,
+      };
+    },
+  },
   async mounted() {
     let { data } = await this.$axios.post("/node/user/getUserInfo", {
       user_id: this.$store.state.userInfo.user_id,
     });
     this.userData = data[0];
-    // console.log(data);
-    // console.log(this.userData);
-  },
-  computed: {
-    styleVar() {
-      return {
-        "--avatar": `url(${this.$store.state.userInfo.user_image})`,
-      };
-    },
   },
 };
 </script>
   
-  <style lang="less" scoped>
+<style lang="less" scoped>
 .accountShow {
   width: 100%;
   max-height: calc(100vh - 90px);
   padding: 40px 0;
   box-sizing: border-box;
+
   .header {
     max-width: 700px;
     height: 120px;
@@ -61,12 +60,14 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .account_info {
       width: 200px;
       height: 100px;
       display: flex;
       justify-content: space-around;
       align-items: center;
+
       .avatar {
         width: 80px;
         height: 80px;
@@ -74,17 +75,21 @@ export default {
         background: var(--avatar) no-repeat center/cover;
         border: 1px solid black;
       }
+
       .info {
         display: flex;
         flex-direction: column;
         justify-content: center;
+
         .name {
           color: red;
         }
       }
     }
+
     .address {
       width: 150px;
+
       .address_item {
         font-size: 13px;
         color: red;

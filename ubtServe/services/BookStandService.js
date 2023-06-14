@@ -1,7 +1,7 @@
 const conn = require("../model/connectionRequest")
 const BookStandService = {
     addStand: async ({ book_stand_id, book_stand_location }, callback) => {
-        console.log("-----" + book_stand_id, book_stand_location + "-----")
+        console.log("bookstand---", book_stand_id, book_stand_location)
 
         let sql_look_id = `select * from BookStand where book_stand_id = ?`
         let sql_insert = `insert into BookStand values(?,default,?)`
@@ -13,24 +13,27 @@ const BookStandService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
                 if (result1.length) {
                     conn.query(sql_update, book_stand_id, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 } else {
                     conn.query(sql_insert, sql_insertParams, (err3, results3) => {
                         if (err3) {
                             throw err3
                         }
-                        // console.log(results3, "444");
-                        if (err3) callback({ code: 0, value: "插入失败！" })
-                        else callback({ code: 1, value: "插入成功" })
+                        if (err3) {
+                            callback({ code: 0, value: "插入失败！" })
+                        } else {
+                            callback({ code: 1, value: "插入成功" })
+                        }
                     })
                 }
             })
@@ -40,7 +43,7 @@ const BookStandService = {
     },
 
     updateStand_location: (book_stand_id, { book_stand_location }, callback) => {
-        console.log(book_stand_id + "====" + book_stand_location);
+        console.log("bookstand---", book_stand_id, book_stand_location);
 
         let sql_update = `UPDATE bookstand set book_stand_location=? where book_stand_id=?`;
         let sql_updateParams = [book_stand_location, book_stand_id];
@@ -51,16 +54,18 @@ const BookStandService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该书立不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该书立不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -70,7 +75,7 @@ const BookStandService = {
     },
 
     updateStand_add: (book_stand_id, callback) => {
-        console.log("====" + book_stand_id);
+        console.log("bookstand---", book_stand_id);
 
         let sql_update = `update BookStand set book_stand_number=book_stand_number+1 where book_stand_id = ?`
         let sql_look_id = `SELECT * FROM bookstand WHERE book_stand_id= ?`
@@ -80,16 +85,18 @@ const BookStandService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该书立不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该书立不存在！" })
+                } else {
                     conn.query(sql_update, book_stand_id, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -99,7 +106,7 @@ const BookStandService = {
     },
 
     updateStand_reduce: (book_stand_id, callback) => {
-        console.log("====" + book_stand_id);
+        console.log("bookstand---", book_stand_id);
 
         let sql_update = `update BookStand set book_stand_number=book_stand_number-1 where book_stand_id = ?`
         let sql_look_id = `SELECT * FROM bookstand WHERE book_stand_id= ?`
@@ -109,17 +116,19 @@ const BookStandService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该书立不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该书立不存在！" })
+                } else {
                     if (result1[0].book_stand_number > 0) {
                         conn.query(sql_update, book_stand_id, (err2, results2) => {
                             if (err2) {
                                 throw err2
                             }
-                            // console.log(results2, "444");
-                            if (err2) callback({ code: 0, value: "更新失败！" })
-                            else callback({ code: 1, value: "更新成功" })
+                            if (err2) {
+                                callback({ code: 0, value: "更新失败！" })
+                            } else {
+                                callback({ code: 1, value: "更新成功" })
+                            }
                         })
                     } else {
                         callback({ code: 0, value: "该书立内书籍以售完！" })
@@ -132,7 +141,7 @@ const BookStandService = {
     },
 
     deleteStand: (book_stand_id, callback) => {
-        console.log(book_stand_id)
+        console.log("bookstand---", book_stand_id)
         let sql_delete = `delete from bookstand where book_stand_id=?`;
         let sql_find = `select book_stand_number from bookstand book_stand_id=?`;
 
@@ -148,9 +157,11 @@ const BookStandService = {
                         if (err) {
                             throw err
                         }
-                        // console.log(results, "444");
-                        if (err) callback({ code: 0, value: "删除失败！" })
-                        else callback({ code: 1, value: "删除成功" })
+                        if (err) {
+                            callback({ code: 0, value: "删除失败！" })
+                        } else {
+                            callback({ code: 1, value: "删除成功" })
+                        }
                     })
                 }
             })
@@ -160,7 +171,7 @@ const BookStandService = {
     },
 
     getStand: (book_stand_id, callback) => {
-        console.log(book_stand_id)
+        console.log("bookstand---", book_stand_id)
         let sql_find = `select * from bookstand where book_stand_id=?`;
 
         try {

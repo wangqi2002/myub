@@ -11,11 +11,11 @@
           <!-- 模拟下拉列表 -->
           <div id="select_time">
             {{ selectValue }}
-            <i class="el-icon-arrow-down" @click="handerDis"></i>
+            <i class="el-icon-arrow-down" @click="handleDis"></i>
             <ul class="select_list" ref="select_list">
-              <li class="active" @click="handerClickOption">微信支付</li>
-              <li @click="handerClickOption">支付宝支付</li>
-              <li @click="handerClickOption">银行卡支付</li>
+              <li class="active" @click="handleClickOption">微信支付</li>
+              <!-- <li @click="handleClickOption">支付宝支付</li>
+              <li @click="handleClickOption">银行卡支付</li> -->
             </ul>
           </div>
         </div>
@@ -27,11 +27,7 @@
         <!-- 图书信息 -->
         <div class="book_wrap">
           <div class="cover">
-            <!-- <img :src="'/node' + book_detail.book_cover" alt="" /> -->
-            <img
-              :src="'https://serve.sirbook.top' + book_detail.book_cover"
-              alt=""
-            />
+            <img :src="'/node' + book_detail.book_cover" alt="" />
           </div>
           <div class="book_content">
             <p>
@@ -43,15 +39,9 @@
           </div>
         </div>
         <!-- 付款按钮 -->
-        <button class="payment" @click="handerPlOrder()">付款</button>
+        <button class="payment" @click="handlePlOrder()">付款</button>
         <!-- 分享展示, 预览的二维码的弹层  -->
-        <el-dialog
-          title="微信支付二维码"
-          :visible="showCodeDialog"
-          @close="showCodeDialog = false"
-        >
-          <!-- 二维码 -->
-          <!--放个容器控制一下居中-->
+        <el-dialog title="微信支付二维码 (1分钟内未支付订单取消)" :visible="showCodeDialog" @close="handleClose()">
           <el-row type="flex" justify="center">
             <div id="qrcode" ref="qrcode"></div>
           </el-row>
@@ -72,10 +62,12 @@ export default {
       addressTrue: this.$store.state.userInfo.user_loacation,
       book_detail: {},
       selectValue: "微信支付",
+      orderId: null,
+      tradeState: null
     };
   },
   methods: {
-    handerDis() {
+    handleDis() {
       this.display = !this.display;
       if (this.display) {
         this.$refs.select_list.style.display = "block";
@@ -83,8 +75,7 @@ export default {
         this.$refs.select_list.style.display = "none";
       }
     },
-    handerClickOption(e) {
-      console.log(e.target.innerText);
+    handleClickOption(e) {
       this.selectValue = e.target.innerText;
       let list = this.$refs.select_list.children;
       for (let i = 0; i < list.length; i++) {
@@ -94,61 +85,116 @@ export default {
       this.display = false;
       this.$refs.select_list.style.display = "none";
     },
+    handleClose() {
+      this.showCodeDialog = false
+    },
     qrcode(url) {
+      this.$refs.qrcode.innerHTML = "";
       let qrcode = new QRCode("qrcode", {
         width: 232, // 设置宽度
         height: 232, // 设置高度
         text: url,
       });
     },
-    async handerPlOrder() {
+    handlePayback(callback) {
+      const _this = this
+      const nowTime = new Date()
+      let trade_state = null
+      const intervalId = setInterval(async function () {
+        let newTime = new Date()
+        if (newTime - nowTime > 6000) {
+          _this.handleClose()
+          trade_state = 'NOTPAY'
+        }
+        if (!_this.showCodeDialog) {
+          clearInterval(intervalId);
+          callback({ trade_state: trade_state })
+        }
+        await _this.$axios
+          .post("/node/payCsback", {
+            orderId: _this.orderId
+          })
+          .then((res) => {
+            if (res.data.value.trade_state === 'SUCCESS') {
+              trade_state = 'SUCCESS'
+              _this.handleClose()
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 3000);
+    },
+    async handlePlOrder() {
       this.showCodeDialog = true;
-      this.$nextTick(() => {
-        let url = "https://baidu.com";
-        this.qrcode(url);
-      });
-      /* await this.$axios
-        .post("/node/buyerorder", {
-          buyerorder_buyerid: this.$store.state.userInfo.user_id,
-          buyerorder_bookid: this.book_detail.bookA_id,
-          buyerorder_sellerid: this.book_detail.bookA_stand,
-          buyerorder_address: this.addressTrue,
-          buyerorder_price: this.book_detail.bookA_price,
+      const _this = this
+      await this.$axios
+        .post("/node/payCS", {
+          description: _this.book_detail.book_name,
+          total: 1,
         })
         .then((res) => {
-          console.log(res, "order");
+          this.orderId = res.data.orderId
+          this.$nextTick(() => {
+            let url = res.data.value.code_url;
+            this.qrcode(url);
+          });
+          this.handlePayback(async (result) => {
+            console.log("order.vue", result)
+            if (result.trade_state == "SUCCESS") {
+              await _this.$axios
+                .post(`/node/buyerorder`, {
+                  buyerorder_id: _this.orderId,
+                  buyerorder_buyerid: _this.$store.state.userInfo.user_id,
+                  buyerorder_bookid: _this.book_detail.bookA_id,
+                  buyerorder_sellerid: _this.book_detail.bookA_stand,
+                  buyerorder_address: _this.addressTrue,
+                  buyerorder_price: _this.book_detail.bookA_price
+                })
+                .then((res) => {
+                  console.log(res, "buyerorder");
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              await _this.$axios
+                .put(`/node/bookabout/state/${_this.book_detail.bookA_id}`, {
+                  bookA_state: 3,
+                })
+                .then((res) => {
+                  console.log(res, "bookabout");
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              await _this.$axios
+                .post("/node/record", {
+                  r_userId: _this.$store.state.userInfo.user_id,
+                  r_url: 4,
+                  r_result: 1,
+                })
+                .then((res) => {
+                  console.log(res, "record");
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+              this.$message.success("支付成功");
+              this.$router.push({ path: "/" });
+            } else if (result.trade_state == "NOTPAY") {
+              this.$message.error("订单取消");
+            }
+          })
         })
         .catch((err) => {
           console.log(err);
         });
-      await this.$axios
-        .put(`/node/bookabout/state/${this.book_detail.bookA_id}`, {
-          bookA_state: 3,
-        })
-        .then((res) => {
-          console.log(res, "bookabout");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      await this.$axios
-        .post("/node/record", {
-          r_userId: this.$store.state.userInfo.user_id,
-          r_url: 4,
-          r_result: 1,
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        }); */
     },
   },
   computed: {},
   mounted() {
     this.book_detail = JSON.parse(this.$route.query.book_detail);
-    console.log(this.book_detail.book_cover);
+    // console.log("order.vue", this.book_detail);
   },
 };
 </script>
@@ -157,19 +203,22 @@ export default {
   width: 100%;
   padding: 0 30px;
   box-sizing: border-box;
+
   .order_wrap {
     max-width: 700px;
-    height: 700px;
-    margin: 40px auto;
+    height: calc(100vh - 100px);
+    margin: 20px auto 60px;
     border: 1px solid #333;
     box-shadow: 0 0 10px #eee;
     display: flex;
     flex-direction: column;
+
     h3 {
       line-height: 40px;
       background: rgb(189, 235, 177);
       text-align: center;
     }
+
     .order_wrap_center {
       flex-grow: 1;
       width: 100%;
@@ -178,6 +227,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
+
       // 支付方式
       .paymentMethod {
         width: 100%;
@@ -189,6 +239,7 @@ export default {
         align-items: center;
         border: 1px solid #333;
       }
+
       // 收货地址
       .address {
         height: 110px;
@@ -200,12 +251,14 @@ export default {
         box-sizing: border-box;
         border: 1px solid #333;
         font-size: 14px;
+
         input {
           border: 1px solid #333;
           height: 25px;
           padding: 0 4px;
           box-sizing: border-box;
           margin-top: 20px;
+
           &:focus {
             border: 1px solid blue;
           }
@@ -220,17 +273,21 @@ export default {
         justify-content: space-around;
         border: 1px solid #333;
         align-items: center;
+
         .cover {
           width: 100px;
           height: 100px;
+
           img {
             width: 100%;
             height: 100%;
           }
         }
+
         p {
           margin-bottom: 10px;
         }
+
         span {
           margin-left: 10px;
         }
@@ -245,6 +302,7 @@ export default {
       }
     }
   }
+
   // 模拟下拉列表
   #select_time {
     position: relative;
@@ -259,9 +317,11 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     i {
       cursor: pointer;
     }
+
     .select_list {
       position: absolute;
       top: calc(100% + 3px);
@@ -270,6 +330,7 @@ export default {
       background: #fff;
       box-shadow: 0 0 3px #b0b0b0;
       display: none;
+
       li {
         width: 100px;
         height: 20px;
@@ -280,6 +341,7 @@ export default {
         box-sizing: border-box;
         font-size: 12px;
       }
+
       .active {
         background: rgb(226, 226, 226);
       }

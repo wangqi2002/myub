@@ -13,9 +13,8 @@ const setToken = function (user_id) {
             // 密钥
             jwtSecret,
             // 过期时间
-            { expiresIn: '24h' }
+            { expiresIn: 60 * 60 * 1 },
         );
-        // console.log(token);
         resolve(token)
     })
 }
@@ -28,9 +27,23 @@ const getToken = function (token) {
                 value: "token是空的"
             })
         } else {
-            // 验证token
-            var info = jwt.verify(token.split(' ')[1], jwtSecret);
-            resolve(info);  //解析返回的值（sign 传入的值）
+            jwt.verify(token.split(' ')[1], jwtSecret, (err, data) => {
+                if (err && err.message === 'invalid token') {
+                    // return res.send({ message: '无效 token', code: 0 })
+                    reject({
+                        code: 0,
+                        value: "无效 token"
+                    })
+                } else if (err && err.message === 'jwt expired') {
+                    // return res.send({ message: 'token 失效', code: 0 })
+                    reject({
+                        code: 0,
+                        value: "token失效"
+                    })
+                }
+                resolve(data);
+                next()
+            });
         }
     })
 }

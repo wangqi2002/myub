@@ -2,23 +2,13 @@
   <div class="bookShow" @scroll.passive="getScroll($event)">
     <!-- 搜索框 -->
     <div class="isbn_wrap">
-      <input
-        class="isbn_input"
-        placeholder="请输入想要查找的书名"
-        @keyup.enter="handerSelect"
-        v-model="select"
-      />
+      <input class="isbn_input" placeholder="请输入想要查找的书名" @keyup.enter="handerSelect" v-model="select" />
       <img src="@/assets/imgs/select_isbn1.png" @click="handerSelect" alt="" />
     </div>
     <!-- 分类列表 -->
     <div class="classify_wrap">
       <ul class="classify_list">
-        <li
-          :class="item.class"
-          @click="handerClass(index)"
-          v-for="(item, index) of list"
-          :key="index"
-        >
+        <li :class="item.class" @click="handerClass(index)" v-for="(item, index) of list" :key="index">
           {{ item.label }}
         </li>
       </ul>
@@ -26,15 +16,8 @@
     <!-- 商品展示列表 -->
     <div class="book_shop">
       <ul class="book_list">
-        <li
-          class="book_item"
-          v-for="(item, index) of book_list"
-          :key="index"
-          @click="handerBookTab(index)"
-        >
-          <!-- <img :src="'/node' + item.book_cover" alt="" /> -->
-          <!-- <img :src="'http://47.113.229.104:4000' + item.book_cover" alt="" /> -->
-          <img :src="'https://serve.sirbook.top' + item.book_cover" alt="" />
+        <li class="book_item" v-for="(item, index) of book_list" :key="index" @click="handerBookTab(index)">
+          <img :src="'/node' + item.book_cover" alt="" />
           <p class="name">{{ item.book_name }}</p>
           <p class="author">{{ item.book_author }}</p>
           <p class="price">￥{{ item.bookA_price }}</p>
@@ -134,7 +117,8 @@ export default {
       classify: "全部",
     };
   },
-  computed: {},
+  computed: {
+  },
   methods: {
     // 点击其他分类样式变化
     handerClass(index) {
@@ -149,14 +133,21 @@ export default {
     },
     // 点击搜索图书
     handerSelect() {
-      if (this.select == "") return (this.book_list = this.book_list_copy);
+      if (this.select == "") {
+        return (this.book_list = this.book_list_copy);
+      }
       this.book_list = this.book_list_copy.filter(
-        (item) => item.book_name.indexOf(this.select) != -1
-      );
+        (item) => {
+          item.book_name.indexOf(this.select) != -1
+        });
     },
     // 点击图书跳转至书籍详情页
     handerBookTab(index) {
-      this.$router.push({ path: "/bookdetails", query: this.book_list[index] });
+      this.$router.push(
+        {
+          path: "/bookdetails",
+          query: this.book_list[index]
+        });
     },
     // 触底获取图书
     getScroll(event) {
@@ -182,7 +173,7 @@ export default {
           classify: this.classify,
         },
       });
-      console.log(data.results);
+      // console.log("bookshow.vue", data.results);
       this.book_list = [...this.book_list, ...data.results.books];
       if (this.book_list_copy.length == 0) {
         this.book_list_copy = this.book_list;
@@ -198,7 +189,7 @@ export default {
     // 获取图书的全部数量
     this.getBooks();
     let { data } = await this.$axios.get("/node/bookabout/allnum");
-    console.log("---", data);
+    // console.log("bookshow.vue", data);
     this.total = data.results[0].total;
   },
 };
@@ -209,6 +200,7 @@ export default {
   width: 100%;
   height: calc(100vh - 40px);
   overflow-y: scroll;
+
   .isbn_wrap {
     max-width: 700px;
     height: 40px;
@@ -222,6 +214,7 @@ export default {
     align-items: center;
     background: #eee;
     box-shadow: 0 0 4px #b0b0b0;
+
     img {
       position: absolute;
       top: 11px;
@@ -229,6 +222,7 @@ export default {
       width: 18px;
       cursor: pointer;
     }
+
     .isbn_input {
       width: 400px;
       height: 30px;
@@ -238,17 +232,20 @@ export default {
       box-sizing: border-box;
     }
   }
+
   // 分类列表
   .classify_wrap {
     max-width: 800px;
     height: 30px;
     margin: 20px auto;
+
     .classify_list {
       width: 100%;
       height: 100%;
       display: flex;
       box-sizing: border-box;
       box-shadow: 0 0 2px #b0b0b0;
+
       li {
         flex: 1;
         height: 100%;
@@ -261,21 +258,25 @@ export default {
         line-height: 30px;
         cursor: pointer;
       }
+
       .classify_item:first-child {
         border-left: 1px solid #333;
       }
+
       .active {
         background: #409eff;
         color: #fff;
       }
     }
   }
+
   // 商品展示列表
   .book_shop {
     max-width: 800px;
     min-height: 580px;
     // border:1px solid #333;
     margin: 20px auto;
+
     .book_list {
       width: 98%;
       padding-top: 20px;
@@ -285,6 +286,7 @@ export default {
       display: flex;
       justify-content: flex-start;
       flex-wrap: wrap;
+
       .book_item {
         position: relative;
         flex: 1;
@@ -298,11 +300,13 @@ export default {
         // justify-content: center;
         flex-direction: column;
         align-items: center;
+
         img {
           width: 100px;
           height: 140px;
           cursor: pointer;
         }
+
         .price {
           position: absolute;
           bottom: 15px;
@@ -310,6 +314,7 @@ export default {
           transform: translateX(-50%);
           color: red;
         }
+
         .author {
           color: #999;
           font-size: 12px;
@@ -317,15 +322,18 @@ export default {
           line-height: 14px;
           -webkit-line-clamp: 1; //显示2行
         }
+
         .name {
           font-size: 14px;
           line-height: 20px;
           margin-top: 10px;
           cursor: pointer;
+
           &:hover {
             color: #ff6700;
           }
         }
+
         p {
           width: 140px;
           color: #333;
@@ -339,6 +347,7 @@ export default {
           text-overflow: ellipsis; //省略号显示超出部分
         }
       }
+
       .book_item:nth-child(3n) {
         margin-right: none !important;
       }

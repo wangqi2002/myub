@@ -1,9 +1,10 @@
 const conn = require("../model/connectionRequest")
+const { createRandomString } = require("../util/tool")
 const recordService = {
     addRecord: ({ r_userId, r_url, r_result }, callback) => {
-        let r_id = new Date().getTime() + Math.random().toString(36).substring(4, 9);
+        let r_id = createRandomString(16);
         let r_date = new Date();
-        console.log(r_id, r_userId, r_url, r_result, r_date + "----");
+        console.log("record+++", r_id, r_userId, r_url, r_result, r_date);
 
         let sql_insert = `INSERT INTO record VALUES(?,?,?,?,?)`;
         let sql_insertParams = [r_id, r_userId, r_url, r_result, r_date];
@@ -13,9 +14,11 @@ const recordService = {
                 if (err) {
                     throw err
                 }
-                // console.log(results, "444");
-                if (err) callback({ code: 0, value: "插入失败！" })
-                else callback({ code: 1, value: "插入成功" })
+                if (err) {
+                    callback({ code: 0, value: "插入失败！" })
+                } else {
+                    callback({ code: 1, value: "插入成功" })
+                }
             })
         } catch (error) {
             console.log(error);

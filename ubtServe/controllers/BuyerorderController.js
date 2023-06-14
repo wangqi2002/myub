@@ -2,7 +2,6 @@ const BuyerorderService = require("../services/BuyerorderService")
 const BuyerorderController = {
     addOrder: async (req, res) => {
         // console.log(req.body)
-
         await BuyerorderService.addOrder(req.body, (result) => {
             res.send(result)
         });
@@ -13,7 +12,6 @@ const BuyerorderController = {
         await BuyerorderService.updateOrder(req.body, req.params.id, (result) => {
             res.send(result)
         });
-
     },
 
     deleteOrder: async (req, res) => {
@@ -21,7 +19,6 @@ const BuyerorderController = {
         await BuyerorderService.deleteOrder(req.params.id, (result) => {
             res.send(result)
         });
-
     },
 
     getOrder_bookId: async (req, res) => {

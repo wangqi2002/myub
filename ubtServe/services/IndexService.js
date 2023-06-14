@@ -1,16 +1,8 @@
 const conn = require("../model/connectionRequest")
+const { createRandomString } = require("../util/tool")
 const WxPay = require("wechatpay-node-v3")
 const axios = require("axios")
 const fs = require("fs")
-
-function createRandomString(len) {
-    let data = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678";
-    let str = "";
-    for (let i = 0; i < len; i++) {
-        str += data.charAt(Math.floor(Math.random() * data.length));
-    }
-    return str;
-}
 
 const pay = new WxPay({
     appid: 'wx32dce84a67a9ad93',
@@ -23,8 +15,8 @@ const IndexService = {
     pay: async (callback) => {
         callback({ code: 1, value: "到达" })
     },
-    payCS: async (callback) => {
-        let orderId = createRandomString(14)
+    payCs: async (callback) => {
+        let orderId = createRandomString(18)
         const params = {
             description: '测试',
             out_trade_no: orderId,
@@ -38,8 +30,12 @@ const IndexService = {
             },
         };
         const result = await pay.transactions_native(params);
+        callback({ code: 1, value: result, orderId: orderId })
+    },
+    payCsback: async ({ orderId }, callback) => {
+        const result = await pay.query({ out_trade_no: orderId });
         callback({ code: 1, value: result })
-    }
+    },
 }
 
 module.exports = IndexService

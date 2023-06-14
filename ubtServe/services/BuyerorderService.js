@@ -1,10 +1,9 @@
 const conn = require("../model/connectionRequest")
+const { createRandomString } = require("../util/tool")
 const BuyerorderService = {
-    addOrder: ({ buyerorder_buyerid, buyerorder_bookid, buyerorder_sellerid, buyerorder_address, buyerorder_price }, callback) => {
-
-        let buyerorder_id = new Date().getTime() + Math.random().toString(36).substring(4, 9);
+    addOrder: ({ buyerorder_buyerid, buyerorder_bookid, buyerorder_sellerid, buyerorder_address, buyerorder_price, buyerorder_id }, callback) => {
         let buyerorder_time = new Date();
-        console.log("----" + buyerorder_id, buyerorder_buyerid, buyerorder_bookid, buyerorder_sellerid, buyerorder_address, buyerorder_time, buyerorder_price + "----");
+        console.log("buyorder---", buyerorder_id, buyerorder_buyerid, buyerorder_bookid, buyerorder_sellerid, buyerorder_address, buyerorder_time, buyerorder_price);
 
         let sql_insert = `INSERT INTO Buyerorder VALUES(?,?,?,?,?,?,?,default)`;
         let sql_insertParams = [buyerorder_id, buyerorder_buyerid, buyerorder_bookid, buyerorder_sellerid, buyerorder_address, buyerorder_time, buyerorder_price];
@@ -14,9 +13,11 @@ const BuyerorderService = {
                 if (err) {
                     throw err
                 }
-                // console.log(results, "444");
-                if (err) callback({ code: 0, value: "插入失败！" })
-                else callback({ code: 1, value: "插入成功" })
+                if (err) {
+                    callback({ code: 0, value: "插入失败！" })
+                } else {
+                    callback({ code: 1, value: "插入成功" })
+                }
             })
         } catch (error) {
             console.log(error);
@@ -24,7 +25,7 @@ const BuyerorderService = {
     },
 
     updateOrder: ({ buyerorder_status }, buyerorder_id, callback) => {
-        console.log(buyerorder_id + "====" + buyerorder_status);
+        console.log("buyorder---", buyerorder_id, buyerorder_status);
 
         let sql_update = `UPDATE Buyerorder set buyerorder_status=? where buyerorder_id=?`;
         let sql_updateParams = [buyerorder_status, buyerorder_id];
@@ -35,16 +36,18 @@ const BuyerorderService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该订单不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该订单不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -54,7 +57,7 @@ const BuyerorderService = {
     },
 
     deleteOrder: (buyerorder_id, callback) => {
-        console.log(buyerorder_id);
+        console.log("buyorder---", buyerorder_id);
 
         let sql_delete = `delete from Buyerorder where buyerorder_id=?`;
         let sql_look_id = `SELECT * FROM Buyerorder WHERE buyerorder_id= ?`
@@ -64,17 +67,19 @@ const BuyerorderService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该订单不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该订单不存在！" })
+                } else {
                     if (result1[0].buyerorder_status === 2 || result1[0].buyerorder_status === 3) {
                         conn.query(sql_delete, buyerorder_id, (err, results) => {
                             if (err) {
                                 throw err
                             }
-                            // console.log(results, "444");
-                            if (err) callback({ code: 0, value: "删除失败！" })
-                            else callback({ code: 1, value: "删除成功" })
+                            if (err) {
+                                callback({ code: 0, value: "删除失败！" })
+                            } else {
+                                callback({ code: 1, value: "删除成功" })
+                            }
                         })
                     } else {
                         callback({ code: 0, value: "该订单未完成！" })
@@ -87,7 +92,7 @@ const BuyerorderService = {
     },
 
     getOrder_bookId: (buyerorder_bookid, callback) => {
-        console.log(buyerorder_bookid);
+        console.log("buyorder---", buyerorder_bookid);
 
         let sql_find = `select * from Buyerorder where buyerorder_bookid=?`;
 
@@ -108,7 +113,7 @@ const BuyerorderService = {
     },
 
     getOrder_buyerId: (buyerorder_buyerid, callback) => {
-        console.log(buyerorder_buyerid);
+        console.log("buyorder---", buyerorder_buyerid);
 
         let sql_find = `select * from Buyerorder where buyerorder_buyerid=?`;
 
@@ -129,7 +134,7 @@ const BuyerorderService = {
     },
 
     getOrder_sellerId: (buyerorder_sellerid, callback) => {
-        console.log(buyerorder_sellerid);
+        console.log("buyorder---", buyerorder_sellerid);
 
         let sql_find = `select * from Buyerorder where buyerorder_sellerid=?`;
 
@@ -150,7 +155,7 @@ const BuyerorderService = {
     },
 
     getOrder_status: ({ buyerorder_status }, callback) => {
-        console.log(buyerorder_status);
+        console.log("buyorder---", buyerorder_status);
 
         let sql_find = `select * from Buyerorder where buyerorder_status=?`;
 
@@ -171,7 +176,6 @@ const BuyerorderService = {
     },
 
     getOrder_status_page: ({ page, orderSn, consignee, status }, callback) => {
-        // console.log(typeof status)
         let sql_find_total = `select COUNT(*) AS count from (select * from buyerorder where FIND_IN_SET (buyerorder_status,?)) as a`;
 
         let sql_find = `select * from buyerorder where FIND_IN_SET (buyerorder_status,?)`
@@ -196,7 +200,6 @@ const BuyerorderService = {
         let sql_find_all = `SELECT * FROM (SELECT * FROM (${sql_find}) a LEFT JOIN (select user_id,user_nickname,user_telphone,user_image from user where user_id in (${sql_find_user})) b on a.buyerorder_buyerid=b.user_id) m LEFT JOIN (SELECT * FROM (select * from bookabout WHERE bookA_id in (${sql_find_book})) a JOIN books b ON a.bookA_isbn=b.book_isbn) n ON m.buyerorder_bookid=n.bookA_id`
         sql_find_all = sql_find_all + ' LIMIT 6 OFFSET ?'
 
-        // console.log(sql_find_all)
         let offsets = (parseInt(page) - 1) * 6
         let sql_totalParams = [status];
         let sql_findParams = [status, status, status, offsets];
@@ -207,7 +210,6 @@ const BuyerorderService = {
                 if (err) {
                     throw err
                 }
-                // console.log(results1)
                 result.count = results1[0].count
                 if (results1[0].count > 0) {
                     conn.query(sql_find_all, sql_findParams, function (err, results2) {
@@ -215,7 +217,6 @@ const BuyerorderService = {
                             throw err
                         }
                         result.orderData = results2
-                        // console.log(result)
                         //将查询出来的数据返回给回调函数
                         callback &&
                             callback(
@@ -235,7 +236,7 @@ const BuyerorderService = {
     },
 
     getOrder_sAn: (buyerorder_status, callback) => {
-        console.log(buyerorder_status);
+        console.log("buyorder---", buyerorder_status);
 
         let sql_find = `select * from (select * from buyerorder where buyerorder_status=?)a LEFT JOIN (select user_id,user_nickname from user where user_id in(select buyerorder_buyerid from buyerorder where buyerorder_status=?))b on a.buyerorder_buyerid=b.user_id;`;
 

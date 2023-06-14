@@ -54,13 +54,11 @@ export default {
           (item) => item.buyerorder_status == tab.index
         );
       }
-      // console.log(tab.index, this.orderListCopy);
       this.activeName = tab.name;
       this.isShow = tab.name;
     },
   },
   async mounted() {
-    // console.log(this.$store.state.userInfo.user_id);
     await this.$axios
       .get(`/node/buyerorder/buyer_id/${this.$store.state.userInfo.user_id}`)
       .then((res) => {
@@ -80,6 +78,7 @@ export default {
   width: 100%;
   padding: 0 30px;
   box-sizing: border-box;
+
   .myOrder_wrap {
     max-width: 800px;
     margin: 20px auto;

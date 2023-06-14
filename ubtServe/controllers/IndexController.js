@@ -7,12 +7,18 @@ const IndexController = {
             res.send(result)
         });
     },
-    payCS: async (req, res) => {
+    payCs: async (req, res) => {
         // console.log(req.body)
-        await IndexService.payCS((result) => {
+        await IndexService.payCs((result) => {
             res.send(result)
         });
-    }
+    },
+    payCsback: async (req, res) => {
+        // console.log(req.body)
+        await IndexService.payCsback(req.body, (result) => {
+            res.send(result)
+        });
+    },
 }
 
 module.exports = IndexController

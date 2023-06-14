@@ -1,8 +1,8 @@
 const conn = require("../model/connectionRequest")
+const { createRandomString } = require("../util/tool")
 const SMSClient = require('@alicloud/sms-sdk');
 const axios = require("axios")
 
-// 开发者信息
 const wx = {
     appid: 'wx54163a3a6b4bfbc6',  // 填写用户自己的appid
     secret: '4a54f54f7a4499b39bab46a621ec4414'  // 填写用户自己的密钥
@@ -10,35 +10,36 @@ const wx = {
 
 const UserService = {
     addUser: ({ user_login_password, user_telphone }, callback) => {
-        let user_id = new Date().getTime() + Math.random().toString(36).substring(2);
+        let user_id = new createRandomString(24);
         let user_registration_time = new Date();
         let user_nickname = "无名";
         let user_loacation = "暂无收货地址";
         let user_image = `/images/userImg/default.png`
 
-        console.log(user_id, user_image, user_telphone, user_login_password, user_registration_time, user_nickname, user_loacation)
+        console.log("user---", user_id, user_image, user_telphone, user_login_password, user_registration_time, user_nickname, user_loacation)
 
         let sql_insert = `INSERT INTO user (user_id,user_image,user_telphone,user_login_password,user_registration_time,user_nickname,user_loacation) VALUES(?,?,?,?,?,?,?)`;
         let sql_insertParams = [user_id, user_image, user_telphone, user_login_password, user_registration_time, user_nickname, user_loacation];
 
         let sql_look_tele = `SELECT * FROM USER WHERE user_telphone = ?`
-        // let look_teleParams = [user_telphone]; 
 
         try {
             conn.query(sql_look_tele, user_telphone, (err, result) => {
                 if (err) {
                     throw err
                 }
-                // console.log(result);
-                if (result.length) callback({ code: 0, value: "该手机号已经被注册！" })
-                else {
+                if (result.length) {
+                    callback({ code: 0, value: "该手机号已经被注册！" })
+                } else {
                     conn.query(sql_insert, sql_insertParams, (err1, results2) => {
                         if (err1) {
                             throw err1
                         }
-                        // console.log(results2, "444");
-                        if (err) callback({ code: 0, value: "注册失败！" })
-                        else callback({ code: 1, value: "注册成功" })
+                        if (err) {
+                            callback({ code: 0, value: "注册失败！" })
+                        } else {
+                            callback({ code: 1, value: "注册成功" })
+                        }
                     })
                 }
             })
@@ -48,13 +49,13 @@ const UserService = {
     },
 
     addUserWeChat: ({ user_weichat }, callback) => {
-        let user_id = new Date().getTime() + Math.random().toString(36).substring(2);
+        let user_id = createRandomString(24);
         let user_registration_time = new Date();
         let user_nickname = "无名";
         let user_loacation = "暂无收货地址";
         let user_image = `/images/userImg/default.png`
 
-        console.log(user_id, user_image, user_registration_time, user_nickname, user_loacation, user_weichat)
+        console.log("user---", user_id, user_image, user_registration_time, user_nickname, user_loacation, user_weichat)
 
         let sql_insert = `INSERT INTO user (user_id,user_nickname,user_image,user_registration_time,user_weichat,user_loacation) VALUES(?,?,?,?,?,?)`;
         let sql_insertParams = [user_id, user_nickname, user_image, user_registration_time, user_weichat, user_loacation];
@@ -66,15 +67,18 @@ const UserService = {
                 if (err) {
                     throw err
                 }
-                if (result1.length) callback({ code: 0, value: "该微信已经被注册！" })
-                else {
+                if (result1.length) {
+                    callback({ code: 0, value: "该微信已经被注册！" })
+                } else {
                     conn.query(sql_insert, sql_insertParams, (err1, results2) => {
                         if (err1) {
                             throw err1
                         }
-                        // console.log(results2, "444");
-                        if (err) callback({ code: 0, value: "注册失败！" })
-                        else callback({ code: 1, value: "注册成功" })
+                        if (err) {
+                            callback({ code: 0, value: "注册失败！" })
+                        } else {
+                            callback({ code: 1, value: "注册成功" })
+                        }
                     })
                 }
             })
@@ -85,7 +89,7 @@ const UserService = {
 
     changeAvaterw: (user_id, user_image, callback) => {
 
-        console.log(user_id, user_image);
+        console.log("user---", user_id, user_image);
 
         let sql_update = `UPDATE User set user_image=? where user_id=?`;
         let sql_updateParams = [user_image, user_id];
@@ -94,24 +98,27 @@ const UserService = {
             if (err1) {
                 throw err1
             }
-            if (!result1.length) callback({
-                code: 0,
-                value: "该用户不存在！"
-            })
-            else {
+            if (!result1.length) {
+                callback({
+                    code: 0,
+                    value: "该用户不存在！"
+                })
+            } else {
                 conn.query(sql_update, sql_updateParams, (err2, results2) => {
                     if (err2) {
                         throw err2
                     }
-                    console.log(results2, "444");
-                    if (err2) callback({
-                        code: 0,
-                        value: "更新失败！"
-                    })
-                    else callback({
-                        code: 1,
-                        value: "更新成功"
-                    })
+                    if (err2) {
+                        callback({
+                            code: 0,
+                            value: "更新失败！"
+                        })
+                    } else {
+                        callback({
+                            code: 1,
+                            value: "更新成功"
+                        })
+                    }
                 })
             }
         })
@@ -119,7 +126,7 @@ const UserService = {
     },
 
     changeTele: (user_telphone, user_id, callback) => {
-        console.log(user_telphone, user_id);
+        console.log("user---", user_telphone, user_id);
 
         let sql_update = `UPDATE User set user_telphone=? where user_id=?`;
         let sql_updateParams = [user_telphone, user_id];
@@ -130,15 +137,18 @@ const UserService = {
                 if (err1) {
                     throw err1
                 }
-                if (!result1.length) callback({ code: 0, value: "该用户不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该用户不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -148,7 +158,7 @@ const UserService = {
     },
 
     changeWeichat: (user_weichat, user_id, callback) => {
-        console.log(user_weichat, user_id);
+        console.log("user---", user_weichat, user_id);
 
         let sql_update = `UPDATE User set user_weichat=? where user_id=?`;
         let sql_updateParams = [user_weichat, user_id];
@@ -158,15 +168,18 @@ const UserService = {
                 if (err1) {
                     throw err1
                 }
-                if (!result1.length) callback({ code: 0, value: "该用户不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该用户不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -177,7 +190,7 @@ const UserService = {
     },
 
     changepwd: (user_password, user_id, callback) => {
-        console.log(user_password, user_id);
+        console.log("user---", user_password, user_id);
 
         let sql_update = `UPDATE User set user_password=? where user_id=?`;
         let sql_updateParams = [user_password, user_id];
@@ -188,15 +201,18 @@ const UserService = {
                 if (err1) {
                     throw err1
                 }
-                if (!result1.length) callback({ code: 0, value: "该用户不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该用户不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -206,15 +222,12 @@ const UserService = {
     },
 
     getUserInfo: ({ user_id }, callback) => {
-        // console.log(user_id);
         let sql_find = `select * from User where user_id=?`;
         try {
             conn.query(sql_find, user_id, function (err, results) {
                 if (err) {
                     throw err
                 }
-                // console.log(results)
-                //将查询出来的数据返回给回调函数
                 callback &&
                     callback(
                         results ? JSON.parse(JSON.stringify(results)) : null
@@ -226,15 +239,12 @@ const UserService = {
     },
 
     getUserInfoW: ({ user_weichat }, callback) => {
-        // console.log(user_weichat);
         let sql_find = `select * from User where user_weichat=?`;
         try {
             conn.query(sql_find, user_weichat, function (err, results) {
                 if (err) {
                     throw err
                 }
-                // console.log(results)
-                //将查询出来的数据返回给回调函数
                 callback &&
                     callback(
                         results ? JSON.parse(JSON.stringify(results)) : null
@@ -246,7 +256,7 @@ const UserService = {
     },
 
     updateNoHeadInfo: ({ nickname, name, telphone, loacation, weichat }, callback) => {
-        // console.log(weichat + "====" + nickname, name, telphone, loacation);
+        console.log("user---", weichat, nickname, name, telphone, loacation);
 
         let sql_update = `UPDATE User set user_nickname=?,user_name=?,user_telphone=?,user_loacation=? where user_weichat=?`;
         let sql_updateParams = [nickname, name, telphone, loacation, weichat];
@@ -255,29 +265,31 @@ const UserService = {
             if (err1) {
                 throw err1
             }
-            // console.log(result1);
-            if (!result1.length) callback({ code: 0, value: "该用户不存在！" })
-            else {
+            if (!result1.length) {
+                callback({ code: 0, value: "该用户不存在！" })
+            } else {
                 conn.query(sql_update, sql_updateParams, (err2, results2) => {
                     if (err2) {
                         throw err2
                     }
-                    // console.log(results2, "444");
-                    if (err2) callback({
-                        code: 0,
-                        value: "更新失败！"
-                    })
-                    else callback({
-                        code: 1,
-                        value: "更新成功"
-                    })
+                    if (err2) {
+                        callback({
+                            code: 0,
+                            value: "更新失败！"
+                        })
+                    } else {
+                        callback({
+                            code: 1,
+                            value: "更新成功"
+                        })
+                    }
                 })
             }
         })
     },
 
     updateInfo: (user_nickname, user_loacation, user_image, user_id, callback) => {
-        console.log(user_id + "====" + user_nickname, user_loacation, user_image)
+        console.log("user---", user_id, user_nickname, user_loacation, user_image)
 
         let sql_update = `UPDATE User set user_nickname=?,user_loacation=?,user_image=? where user_id=?`;
         let sql_updateParams = [user_nickname, user_loacation, user_image, user_id];
@@ -287,16 +299,18 @@ const UserService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该用户不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该用户不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        // console.log(results2, "444");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -306,7 +320,7 @@ const UserService = {
     },
 
     changeCollect: ({ user_collection, user_id }, callback) => {
-        console.log(user_id + "====" + user_collection)
+        console.log("user---", user_id, user_collection)
 
         let sql_update = `UPDATE User set user_collection=? where user_id=?`;
         let sql_updateParams = [user_collection, user_id];
@@ -316,16 +330,18 @@ const UserService = {
                 if (err1) {
                     throw err1
                 }
-                // console.log(result1);
-                if (!result1.length) callback({ code: 0, value: "该用户不存在！" })
-                else {
+                if (!result1.length) {
+                    callback({ code: 0, value: "该用户不存在！" })
+                } else {
                     conn.query(sql_update, sql_updateParams, (err2, results2) => {
                         if (err2) {
                             throw err2
                         }
-                        console.log(results2, "update_collection");
-                        if (err2) callback({ code: 0, value: "更新失败！" })
-                        else callback({ code: 1, value: "更新成功" })
+                        if (err2) {
+                            callback({ code: 0, value: "更新失败！" })
+                        } else {
+                            callback({ code: 1, value: "更新成功" })
+                        }
                     })
                 }
             })
@@ -335,7 +351,7 @@ const UserService = {
     },
 
     getCollections: (user_id, callback) => {
-        console.log(user_id)
+        console.log("user---", user_id)
 
         let sql_find = `select user_collection from User where user_id=?`;
         try {
@@ -343,8 +359,6 @@ const UserService = {
                 if (err) {
                     throw err
                 }
-                console.log(results, "getCollections");
-                //将查询出来的数据返回给回调函数
                 callback &&
                     callback(
                         results ? JSON.parse(JSON.stringify(results)) : null
@@ -356,7 +370,7 @@ const UserService = {
     },
 
     deleteCollectionAll: (user_id, callback) => {
-        console.log(user_id)
+        console.log("user---", user_id)
 
         let sql_delete = `UPDATE User set user_collection=null where user_id=?`;
         try {
@@ -364,9 +378,11 @@ const UserService = {
                 if (err) {
                     throw err
                 }
-                console.log(results, "deleteCollectionAll");
-                if (err) callback({ code: 0, value: "清空失败！" })
-                else callback({ code: 1, value: "清空成功" })
+                if (err) {
+                    callback({ code: 0, value: "清空失败！" })
+                } else {
+                    callback({ code: 1, value: "清空成功" })
+                }
             })
         } catch (error) {
             console.log(error);
@@ -381,14 +397,12 @@ const UserService = {
         let sql_findParams = [offsets];
         let newPage = parseInt(page);
         let result = { count: null, userData: null, page: newPage };
-        // console.log(typeof newPage)
 
         try {
             conn.query(sql_find_page, function (err, results1, fields) {
                 if (err) {
                     throw err
                 }
-                // console.log(results1)
                 if (page > results1[0].pageTotal) {
                     callback({ code: 0, value: "页数超出限制" })
                 } else {
@@ -396,17 +410,13 @@ const UserService = {
                         if (err) {
                             throw err
                         }
-                        // console.log(results2)
                         result.count = results2[0].count
                         if (results2[0].count > 0) {
                             conn.query(sql_find, sql_findParams, function (err, results3, fields) {
                                 if (err) {
                                     throw err
                                 }
-                                // console.log(results3)
                                 result.userData = results3
-                                console.log(result)
-                                //将查询出来的数据返回给回调函数
                                 callback &&
                                     callback(
                                         result ? JSON.parse(JSON.stringify(result)) : null
@@ -425,7 +435,6 @@ const UserService = {
         let sql_find_total = `select COUNT(*) AS count from User where user_nickname like ?`;
         let sql_find = `SELECT * FROM User where user_nickname like ?`;
         let sql_findParams = [('%' + nickname + '%')];
-        // console.log(sql_findParams)
 
         let result = { count: null, userData: null, page: 1 };
 
@@ -434,17 +443,13 @@ const UserService = {
                 if (err) {
                     throw err
                 }
-                // console.log(results1)
                 result.count = results1[0].count
                 if (results1[0].count > 0) {
                     conn.query(sql_find, sql_findParams, function (err, results2, fields) {
                         if (err) {
                             throw err
                         }
-                        // console.log(results2)
                         result.userData = results2
-                        console.log(result)
-                        //将查询出来的数据返回给回调函数
                         callback &&
                             callback(
                                 result ? JSON.parse(JSON.stringify(result)) : null
@@ -467,8 +472,6 @@ const UserService = {
         for (let i = 0; i < 4; i++) {
             num += Math.floor(Math.random() * 10).toString()
         }
-        console.log(num)
-        // console.log(result);  
         callback && callback(num)
     },
 
@@ -519,7 +522,7 @@ const UserService = {
     }, */
 
     loginUser: ({ user_telphone, user_login_password }, callback) => {
-        console.log(user_telphone, user_login_password)
+        console.log("user---", user_telphone, user_login_password)
         let sql_look_tele = `SELECT * FROM USER WHERE user_telphone = ?`
 
         try {
@@ -527,13 +530,13 @@ const UserService = {
                 if (err) {
                     throw err
                 }
-                // console.log(result)
-                if (!result || !result?.length)
+                if (!result || !result?.length) {
                     callback({ code: 0, value: "该账号不存在！" })
-                else if (result[0].user_login_password != user_login_password)
+                } else if (result[0].user_login_password != user_login_password) {
                     callback({ code: 0, value: "密码错误！" })
-                else
+                } else {
                     callback({ code: 1, value: "登陆成功", data: result[0] })
+                }
             })
         } catch (error) {
             console.log(error);
@@ -541,7 +544,7 @@ const UserService = {
     },
 
     loginUserS: ({ user_telphone }, callback) => {
-        console.log(user_telphone)
+        console.log("user---", user_telphone)
         let sql_look_tele = `SELECT * FROM USER WHERE user_telphone = ?`
 
         try {
@@ -549,11 +552,11 @@ const UserService = {
                 if (err) {
                     throw err
                 }
-                // console.log(result)
-                if (!result || !result?.length)
+                if (!result || !result?.length) {
                     callback({ code: 0, value: "该账号不存在！" })
-                else
+                } else {
                     callback({ code: 1, value: "登陆成功", data: result[0] })
+                }
             })
         } catch (error) {
             console.log(error);
@@ -564,11 +567,11 @@ const UserService = {
         var url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + wx.appid + '&secret=' + wx.secret + '&js_code=' + code + '&grant_type=authorization_code'
 
         let result = await axios.get(url)
-        // console.log("data:", result.data)
-        if ('openid' in result.data)
+        if ('openid' in result.data) {
             callback({ code: 1, value: "登陆成功", data: result.data })
-        else
+        } else {
             callback({ code: 0, value: "登陆失败", data: result.data })
+        }
     }
 }
 
