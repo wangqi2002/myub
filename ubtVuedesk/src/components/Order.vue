@@ -27,7 +27,7 @@
         <!-- 图书信息 -->
         <div class="book_wrap">
           <div class="cover">
-            <img :src="'/node' + book_detail.book_cover" alt="" />
+            <img :src="$store.state.imgUrl + book_detail.book_cover" alt="" />
           </div>
           <div class="book_content">
             <p>

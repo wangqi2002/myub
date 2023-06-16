@@ -120,7 +120,7 @@ export default {
           if (item.results.length != 0) {
             item = item.results[0];
             valueC = valueC.concat(`${item.bookA_id} `);
-            item.book_cover = "/node" + item.book_cover;
+            item.book_cover = this.$store.state.imgUrl + item.book_cover;
             item = { ...item, bol: false };
             newData.push(item);
           }

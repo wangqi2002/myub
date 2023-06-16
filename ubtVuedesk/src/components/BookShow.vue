@@ -17,7 +17,7 @@
     <div class="book_shop">
       <ul class="book_list">
         <li class="book_item" v-for="(item, index) of book_list" :key="index" @click="handerBookTab(index)">
-          <img :src="'/node' + item.book_cover" alt="" />
+          <img :src="$store.state.imgUrl + item.book_cover" alt="" />
           <p class="name">{{ item.book_name }}</p>
           <p class="author">{{ item.book_author }}</p>
           <p class="price">￥{{ item.bookA_price }}</p>

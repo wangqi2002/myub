@@ -6,7 +6,7 @@
     </div>
     <div class="center">
       <div class="center_left">
-        <img :src="'/node' + booksDetail.book_cover" alt="" />
+        <img :src="$store.state.imgUrl + booksDetail.book_cover" alt="" />
         <div class="book_info">
           <p>书名：{{ booksDetail.book_name }}</p>
           <p>作者：{{ booksDetail.book_author }}</p>

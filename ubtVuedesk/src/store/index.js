@@ -14,7 +14,8 @@ export default new Vuex.Store({
       user_telphone: null,
       user_loacation: null,
       user_name: null,
-    }
+    },
+    imgUrl: 'https://serve.sirbook.top'
   },
   mutations: {
     CHANGEBOL(state, val) {

@@ -1,7 +1,7 @@
 <template>
   <div class="books_detail">
     <div class="detail_head">
-      <img :src="'/node' + book_detail.bookA_image" alt="" />
+      <img :src="$store.state.imgUrl + book_detail.bookA_image" alt="" />
       <div class="detail_buy">
         <div class="book_name">
           <p class="book_name_name">{{ book_detail.book_name }}</p>
