@@ -160,6 +160,14 @@ const BookAboutController = {
         })
     },
 
+    getBook_kindlink: async (req, res) => {
+        // console.log(req.params.id)
+        await BookAboutService.getBook_kindlink(req.params.id, (results) => {
+            // 以json的形式返回
+            res.json({ results })
+        })
+    },
+
     getBook_stand: async (req, res) => {
         // console.log(req.params.id)
         await BookAboutService.getBook_stand(req.params.id, (results) => {

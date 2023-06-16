@@ -45,8 +45,8 @@ export default {
           class: "classify_item",
         },
         {
-          value: "冶金",
-          label: "冶金",
+          value: "计算机",
+          label: "计算机",
           class: "classify_item",
         },
         {
@@ -55,8 +55,23 @@ export default {
           class: "classify_item",
         },
         {
-          value: "材料",
-          label: "材料",
+          value: "土木",
+          label: "土木",
+          class: "classify_item",
+        },
+        {
+          value: "新闻",
+          label: "新闻",
+          class: "classify_item",
+        },
+        {
+          value: "数统",
+          label: "数统",
+          class: "classify_item",
+        },
+        {
+          value: "物理",
+          label: "物理",
           class: "classify_item",
         },
         {
@@ -65,13 +80,8 @@ export default {
           class: "classify_item",
         },
         {
-          value: "数理",
-          label: "数理",
-          class: "classify_item",
-        },
-        {
-          value: "建筑",
-          label: "建筑",
+          value: "电气",
+          label: "电气",
           class: "classify_item",
         },
         {
@@ -80,28 +90,18 @@ export default {
           class: "classify_item",
         },
         {
-          value: "电器",
-          label: "电器",
+          value: "动力",
+          label: "动力",
           class: "classify_item",
         },
         {
-          value: "计算机",
-          label: "计算机",
+          value: "材料",
+          label: "材料",
           class: "classify_item",
         },
         {
-          value: "外国语",
-          label: "外国语",
-          class: "classify_item",
-        },
-        {
-          value: "法学",
-          label: "法学",
-          class: "classify_item",
-        },
-        {
-          value: "教育",
-          label: "教育",
+          value: "建筑",
+          label: "建筑",
           class: "classify_item",
         },
         {

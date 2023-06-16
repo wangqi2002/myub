@@ -417,6 +417,25 @@ const BookAboutService = {
         }
     },
 
+    getBook_kindlink: (bookA_kind, callback) => {
+        let sql_find = `select * from bookabout a LEFT OUTER JOIN books s  ON a.bookA_isbn=s.book_isbn where bookA_kind=? and bookA_state=2`;
+
+        try {
+            conn.query(sql_find, bookA_kind, function (err, results, fields) {
+                if (err) {
+                    throw err
+                }
+                //将查询出来的数据返回给回调函数
+                callback &&
+                    callback(
+                        results ? JSON.parse(JSON.stringify(results)) : null
+                    )
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     getBook_stand: (bookA_stand, callback) => {
         let sql_find = `select * from bookabout where bookA_stand=?`;
 

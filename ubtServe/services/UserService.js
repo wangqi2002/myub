@@ -84,14 +84,14 @@ const UserService = {
         }
     },
 
-    changeAvaterw: (user_id, user_image, callback) => {
+    changeAvaterw: (open_id, user_image, callback) => {
 
-        console.log("user---", user_id, user_image);
+        console.log("user---", open_id, user_image);
 
-        let sql_update = `UPDATE User set user_image=? where user_id=?`;
-        let sql_updateParams = [user_image, user_id];
-        let sql_look_account = `SELECT * FROM USER WHERE user_id= ?`
-        conn.query(sql_look_account, user_id, (err1, result1) => {
+        let sql_update = `UPDATE User set user_image=? where user_weichat=?`;
+        let sql_updateParams = [user_image, open_id];
+        let sql_look_account = `SELECT * FROM USER WHERE user_weichat= ?`
+        conn.query(sql_look_account, open_id, (err1, result1) => {
             if (err1) {
                 throw err1
             }

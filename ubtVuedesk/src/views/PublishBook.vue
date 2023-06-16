@@ -81,56 +81,60 @@ export default {
       userData: {},
       options: [
         {
+          value: "全部",
+          label: "全部",
+        },
+        {
           value: "通用",
           label: "通用",
-        },
-        {
-          value: "冶金",
-          label: "冶金",
-        },
-        {
-          value: "经管",
-          label: "经管",
-        },
-        {
-          value: "材料",
-          label: "材料",
-        },
-        {
-          value: "化工",
-          label: "化工",
-        },
-        {
-          value: "数理",
-          label: "数理",
-        },
-        {
-          value: "建筑",
-          label: "建筑",
-        },
-        {
-          value: "机械",
-          label: "机械",
-        },
-        {
-          value: "电器",
-          label: "电器",
         },
         {
           value: "计算机",
           label: "计算机",
         },
         {
-          value: "外国语",
-          label: "外国语",
+          value: "经管",
+          label: "经管",
         },
         {
-          value: "法学",
-          label: "法学",
+          value: "土木",
+          label: "土木",
         },
         {
-          value: "成人教育",
-          label: "成人教育",
+          value: "新闻",
+          label: "新闻",
+        },
+        {
+          value: "数统",
+          label: "数统",
+        },
+        {
+          value: "物理",
+          label: "物理",
+        },
+        {
+          value: "化工",
+          label: "化工",
+        },
+        {
+          value: "电气",
+          label: "电气",
+        },
+        {
+          value: "机械",
+          label: "机械",
+        },
+        {
+          value: "动力",
+          label: "动力",
+        },
+        {
+          value: "材料",
+          label: "材料",
+        },
+        {
+          value: "建筑",
+          label: "建筑",
         },
         {
           value: "其他",
