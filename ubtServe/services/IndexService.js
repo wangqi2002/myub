@@ -3,12 +3,13 @@ const { createRandomString } = require("../util/tool")
 const WxPay = require("wechatpay-node-v3")
 const axios = require("axios")
 const fs = require("fs")
+const path = require('path')
 
 const pay = new WxPay({
     appid: 'wx32dce84a67a9ad93',
     mchid: '1639966417',
-    publicKey: fs.readFileSync('D:/Code/Vscode/myub/ubtServe/public/nativePay/apiclient_cert.pem'), // 公钥
-    privateKey: fs.readFileSync('D:/Code/Vscode/myub/ubtServe/public/nativePay/apiclient_key.pem'), // 秘钥
+    publicKey: fs.readFileSync(path.join(__dirname, "../public/nativePay/apiclient_cert.pem")), // 公钥
+    privateKey: fs.readFileSync(path.join(__dirname, "../public/nativePay/apiclient_key.pem")), // 秘钥
 });
 
 const IndexService = {

@@ -20,9 +20,8 @@ module.exports = {
                 }
             },
             '/node': {
-                // target: 'https://serve.sirbook.top',
-                // target: 'http://47.113.229.104:4000',
-                target: 'http://localhost:4000',
+                target: 'https://serve.sirbook.top',
+                // target: 'http://localhost:4000',
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {
@@ -32,7 +31,6 @@ module.exports = {
             '/socket.io': {
                 // 目标 API 地址
                 target: 'https://serve.sirbook.top',
-                // target: 'http://47.113.229.104:4000/',
                 // target: 'http://localhost:4000/',
                 // 如果要代理 websockets
                 ws: true,
