@@ -102,7 +102,7 @@ export default {
       let trade_state = null
       const intervalId = setInterval(async function () {
         let newTime = new Date()
-        if (newTime - nowTime > 6000) {
+        if (newTime - nowTime > 60000) {
           _this.handleClose()
           trade_state = 'NOTPAY'
         }
@@ -111,7 +111,7 @@ export default {
           callback({ trade_state: trade_state })
         }
         await _this.$axios
-          .post("/node/payCsback", {
+          .post("/node/payBack", {
             orderId: _this.orderId
           })
           .then((res) => {
@@ -129,7 +129,7 @@ export default {
       this.showCodeDialog = true;
       const _this = this
       await this.$axios
-        .post("/node/payCS", {
+        .post("/node/payPc", {
           description: _this.book_detail.book_name,
           total: _this.book_detail.bookA_price,
         })

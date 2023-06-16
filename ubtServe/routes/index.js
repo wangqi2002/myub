@@ -5,6 +5,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', IndexController.pay);
 
-router.post("/payCs", IndexController.payCs)
-router.post("/payCsback", IndexController.payCsback)
+router.post("/payPc", IndexController.payPc)
+router.post("/payWechat", IndexController.payWechat)
+router.post("/payBack", IndexController.payBack)
 module.exports = router;

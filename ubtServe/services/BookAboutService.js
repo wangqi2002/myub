@@ -160,6 +160,24 @@ const BookAboutService = {
         }
     },
 
+    getBook_link: (args, callback) => {
+        let sql_find = `select * from bookabout a LEFT OUTER JOIN books s  ON a.bookA_isbn=s.book_isbn WHERE bookA_state=2`;
+
+        try {
+            conn.query(sql_find, function (err, results) {
+                if (err) {
+                    throw err
+                }
+                callback &&
+                    callback(
+                        results ? JSON.parse(JSON.stringify(results)) : null
+                    )
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
     getBook_page: ({ page }, callback) => {
         let sql_find_total = `select COUNT(*) AS count from bookabout`;
         let sql_find = `select * from (select * from bookabout LIMIT 6 OFFSET ?) a LEFT OUTER JOIN books s ON a.bookA_isbn=s.book_isbn`

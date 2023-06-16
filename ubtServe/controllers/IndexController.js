@@ -7,13 +7,18 @@ const IndexController = {
             res.send(result)
         });
     },
-    payCs: async (req, res) => {
-        await IndexService.payCs(req.body, (result) => {
+    payPc: async (req, res) => {
+        await IndexService.payPc(req.body, (result) => {
             res.send(result)
         });
     },
-    payCsback: async (req, res) => {
-        await IndexService.payCsback(req.body, (result) => {
+    payWechat: async (req, res) => {
+        await IndexService.payWechat(req.body, (result) => {
+            res.send(result)
+        });
+    },
+    payBack: async (req, res) => {
+        await IndexService.payBack(req.body, (result) => {
             res.send(result)
         });
     },

@@ -72,6 +72,13 @@ const BookAboutController = {
         })
     },
 
+    getBook_link: async (req, res) => {
+        await BookAboutService.getBook_link(null, (results) => {
+            // 以json的形式返回
+            res.json({ results })
+        })
+    },
+
     getBook_page: async (req, res) => {
         await BookAboutService.getBook_page(req.query, (results) => {
             // 以json的形式返回

@@ -3,9 +3,13 @@ const { createRandomString } = require("../util/tool")
 const SMSClient = require('@alicloud/sms-sdk');
 const axios = require("axios")
 
+// const wx = {
+//     appid: 'wx54163a3a6b4bfbc6',  // 填写用户自己的appid
+//     secret: '4a54f54f7a4499b39bab46a621ec4414'  // 填写用户自己的密钥
+// }
 const wx = {
-    appid: 'wx54163a3a6b4bfbc6',  // 填写用户自己的appid
-    secret: '4a54f54f7a4499b39bab46a621ec4414'  // 填写用户自己的密钥
+    appid: 'wx32dce84a67a9ad93',  // 填写用户自己的appid
+    secret: 'deb70cb5f2e51f25fffadec8c4f6be92'  // 填写用户自己的密钥
 }
 
 const UserService = {

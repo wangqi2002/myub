@@ -15,7 +15,7 @@ const IndexService = {
     pay: async (callback) => {
         callback({ code: 1, value: "到达" })
     },
-    payCs: async ({ description, total }, callback) => {
+    payPc: async ({ description, total }, callback) => {
         total *= 1000
         console.log("index", description, total)
         let orderId = createRandomString(18)
@@ -34,7 +34,29 @@ const IndexService = {
         const result = await pay.transactions_native(params);
         callback({ code: 1, value: result, orderId: orderId })
     },
-    payCsback: async ({ orderId }, callback) => {
+    payWechat: async ({ description, total, openid }, callback) => {
+        total *= 1000
+        console.log("index", description, total, openid)
+        let orderId = createRandomString(18)
+        const params = {
+            description: description,
+            out_trade_no: orderId,
+            notify_url: 'https://serve.sirbook.top/',
+            amount: {
+                total: 1,
+                currency: "CNY"
+            },
+            payer: {
+                openid: openid,
+            },
+            scene_info: {
+                payer_client_ip: 'ip',
+            },
+        };
+        const result = await pay.transactions_jsapi(params);
+        callback({ code: 1, value: result, orderId: orderId })
+    },
+    payBack: async ({ orderId }, callback) => {
         const result = await pay.query({ out_trade_no: orderId });
         callback({ code: 1, value: result })
     },

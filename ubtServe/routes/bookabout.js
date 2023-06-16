@@ -15,6 +15,8 @@ router.put("/price/:id", BookAboutController.updateBook_price)
 router.delete("/:id", BookAboutController.deleteBook)
 //查询所有书籍
 router.get("/all", BookAboutController.getBook)
+//查询所有书籍
+router.get("/all_link", BookAboutController.getBook_link)
 //查询所有书籍 分页
 router.get("/all_page", BookAboutController.getBook_page)
 //总条数
