@@ -5,6 +5,7 @@ var router = express.Router();
 
 //添加书籍
 router.post("/", upload_detailsImg.array('book_image', 4), BookAboutController.addBook)
+router.post("/addW", BookAboutController.addBookW)
 //更新类别
 router.put("/kind/:id", BookAboutController.updateBook_kind)
 //更新状态

@@ -16,6 +16,11 @@ const BookAboutController = {
             res.send(result)
         });
     },
+    addBookW: async (req, res) => {
+        await BookAboutService.addBookW(req.body, (result) => {
+            res.send(result)
+        });
+    },
 
     updateBook_kind: async (req, res) => {
         // console.log(req.body, req.params.id)

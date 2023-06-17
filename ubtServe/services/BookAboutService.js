@@ -24,6 +24,29 @@ const BookAboutService = {
             console.log(error);
         }
     },
+    addBookW: ({ bookA_id, bookA_isbn, bookA_old_degree, bookA_price, bookA_stand, bookA_kind }, callback) => {
+        console.log("bookabout---", bookA_id, bookA_isbn, bookA_old_degree, bookA_price, bookA_stand, bookA_kind);
+
+        let bookA_date = new Date();
+        let bookA_image = `/images/detailsImg/default.png`
+        let sql_insert = `INSERT INTO bookabout VALUES(?,?,?,?,?,?,?,default,?)`;
+        let sql_insertParams = [bookA_id, bookA_isbn, bookA_old_degree, bookA_price, bookA_image, bookA_stand, bookA_kind, bookA_date];
+
+        try {
+            conn.query(sql_insert, sql_insertParams, (err, results) => {
+                if (err) {
+                    throw err
+                }
+                if (err) {
+                    callback({ code: 0, value: "插入失败！" })
+                } else {
+                    callback({ code: 1, value: "插入成功", _id: bookA_id })
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    },
 
     updateBook_kind: ({ bookA_kind }, bookA_id, callback) => {
         console.log("bookabout---", bookA_id, bookA_kind);
